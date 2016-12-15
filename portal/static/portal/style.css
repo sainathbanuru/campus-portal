@@ -1,0 +1,65 @@
+body {
+    background: white url("images/background.png");
+}
+.navbar {
+    border-radius: 0;
+    background: crimson;
+    border: none;
+    margin: 0;
+}
+
+
+.navbar-brand{
+    font-size: 1.5em;
+    font-family: 'Satisfy', cursive;
+}
+
+.navbar-brand a{
+    color: cornsilk;
+}
+
+.nav.navbar-nav.navbar-right li a {
+    font-size:1.2em;
+
+}
+.navbar-toggle{
+    border: none;
+}
+.colHeight{
+    height: 800px;
+    background: white;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: auto
+}
+.col-md-2 , .col-md-7, .col-md-3{
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.centerText{
+    text-align: center;
+    padding:15px;
+    margin-top: 0;
+    color: white;
+    text-decoration: underline;
+    background: crimson;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+}
+footer{
+    height: 50px;
+    background: crimson;
+    margin-top: 10px;
+}
+.colHeight ul{
+    padding: 2px;
+}
+.colHeight ul li{
+    font-size: 1.2em;
+    list-style-type: none;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+}
+.colHeight ul li a{
+    text-decoration: none;
+}

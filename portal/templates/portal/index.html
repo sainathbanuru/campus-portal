@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IIITS-campus</title>
+    {% load staticfiles %}
+    <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'portal/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'portal/style.css' %}"/>
+
+</head>
+<body>
+    <nav class = "navbar navbar-inverse">
+        <div class = "container-fluid">
+            <div class = "navbar-header">
+                <button type="button" class="navbar-toggle" data-target="collapse" data-target = "#topNavBar">
+                    <span class = "icon-bar"></span>
+                    <span class = "icon-bar"></span>
+                    <span class = "icon-bar"></span>
+                </button>
+                <a href="#" class = navbar-brand> IIITS-Campus</a>
+            </div>
+            <div class = "navbar-collapse collapse" id="topNavBar">
+                <ul class = "nav navbar-nav navbar-right">
+                    <li><a href="#" class ="active">Home</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Timetable</a></li>
+                    <li><a><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; LogIn</a></li></li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class = "row">
+            <div class = "col-md-2" >
+                <div class="colHeight">
+                    <h4 class="centerText">Quick Links</h4>
+                    <ul>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;OJ</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Cloud</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class = col-md-7>
+                <div class="colHeight">
+                    {% block centerContent %}
+                    {% endblock %}
+                </div>
+            </div>
+            <div class = col-md-3>
+                <div class="colHeight">
+                    <h4 class ="centerText">Notices</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 centerText">
+                    <span class="copyright ">Copyright &copy; IIITS 2016</span>
+                </div>
+
+                <div class="col-md-6 centerText">
+                    <ul class="list-inline social-buttons">
+                       <!-- <li><a href="#"><img src="{% static 'portal/images/facebook.png' %}" alt="IIITS-facebook"></a>
+                        </li>
+                        <li><a href="#"><img src="{% static 'portal/images/twitter.png' %}" alt="IIITS-twitter"></a>
+                        </li>
+                        <li><a href="#"><img src="{% static 'portal/images/wikipedia.png' %}" alt="IIITS-wikipedia"></a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{% static 'portal/js/main.js' %}"></script>
+</body>
+</html>
