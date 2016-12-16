@@ -6,4 +6,6 @@ urlpatterns = [
     url(r'^events/$',views.events,name='events'),
     url(r'^almanac/$',views.almanac,name='almanac'),
     url(r'^timetable/$',views.timetable,name='timetable'),
+    url(r'^requestform/$',views.requestForm,name='requestForm'),
+    url(r'^contact/$',views.contact,name='contact'),
 ]

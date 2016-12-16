@@ -56,6 +56,10 @@ body {
     -moz-border-radius-topleft: 10px;
     -moz-border-radius-topright: 10px;
 }
+.centerhead{
+    text-align: center;
+    text-decoration: underline;
+}
 
 footer{
     height: 50px;
@@ -68,15 +72,16 @@ footer{
 
 .colHeight ul li{
     font-size: 1.2em;
-    list-style-type: none;
     padding: 10px;
     border-bottom: 1px solid lightgray;
 }
 
+
+
 .colHeight ul li a{
     text-decoration: none;
 }
-.btn-events{
+.btn-events, .btn-form{
     margin: 15px 25px 0px 0px;
     text-align: right;
 }
@@ -86,4 +91,19 @@ footer{
 }
 .list-inline li{
     list-style-type: none;
+}
+
+.fieldlength{
+    padding: 20px 40px 0px 40px;
+}
+
+.notice-list ul{
+    padding:0px;
+}
+
+.notice-list ul li{
+    font-size: 0.8em;
+    border:0px;
+    padding: 5px;
+    border-bottom: 1px solid lightgray;
 }

@@ -29,6 +29,7 @@
                     <li><a href="{% url 'events' %}">Events</a></li>
                     <li><a href="{% url 'almanac' %}">Almanac</a></li>
                     <li><a href="{% url 'timetable' %}">Timetable</a></li>
+                    <li><a href="{% url 'contact' %}">contact</a></li>
                     <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; LogIn</a></li>
 
                 </ul>
@@ -43,7 +44,8 @@
                     <ul>
                         <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>
                         <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
+                        <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
+                        <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
                         <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;OJ</a></li>
                         <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Cloud</a></li>
                     </ul>
@@ -56,8 +58,13 @@
                 </div>
             </div>
             <div class = col-md-3>
-                <div class="colHeight">
+                <div class="colHeight notice-list">
                     <h4 class ="centerText">Notices</h4>
+                    <ul>
+                        {% for notice in notices %}
+                            <li><p>{{ notice.notice_title }}</p></li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
