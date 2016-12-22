@@ -30,7 +30,17 @@
                     <li><a href="{% url 'almanac' %}">Almanac</a></li>
                     <li><a href="{% url 'timetable' %}">Timetable</a></li>
                     <li><a href="{% url 'contact' %}">contact</a></li>
-                    <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; LogIn</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;{{ user.get_full_name }}&nbsp;<span class="caret" aria-hidden="true"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-drop"><a href="{% url 'changepassword' %}">change Password</a></li>
+			                    <li role="separator" class="divider"></li>
+			                    <li class="nav-drop"><a href="{% url 'userLogout' %}">logout</a></li>
+			                 </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'userLogin' %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;LogIn</a></li>
+                    {% endif %}
 
                 </ul>
             </div>
@@ -61,7 +71,7 @@
                 <div class="colHeight notice-list">
                     <h4 class ="centerText">Notices</h4>
                     <ul>
-                        {% for notice in notices %}
+                        {% for notice in all_notices %}
                             <li><p>{{ notice.notice_title }}</p></li>
                         {% endfor %}
                     </ul>

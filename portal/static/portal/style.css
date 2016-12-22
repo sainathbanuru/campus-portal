@@ -29,9 +29,19 @@ body {
     color: #fed136;
 }
 
+.navbar-nav > li > .dropdown-menu > li > a {
+    color: #000; 
+}
+
+.navbar-nav > li > .dropdown-menu > li > a:hover {
+    color: red;
+    background-color: transparent;;
+}
 .navbar-toggle{
     border: none;
 }
+
+
 
 .colHeight{
     height: 800px;
@@ -96,7 +106,9 @@ footer{
 .fieldlength{
     padding: 20px 40px 0px 40px;
 }
-
+.formfieldlength{
+    padding: 20px 60px 0px 60px;
+}
 .notice-list ul{
     padding:0px;
 }
@@ -106,4 +118,31 @@ footer{
     border:0px;
     padding: 5px;
     border-bottom: 1px solid lightgray;
+}
+.event-row{
+    background: white url("images/background.png");
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 0px;
+    display: inline;
+
+}
+.event-row .event-date{
+    background: chocolate;
+    height: 160px;
+    display: inline;
+    border-radius: 10px ;
+}
+.event-row .event-date p {
+    text-align: center;
+    font-size: 20px;
+    margin-top:10px;
+    color: cornsilk;
+}
+.event-row .event-date h1{
+    font-size: 60px;
+    color: cornsilk;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
 }
