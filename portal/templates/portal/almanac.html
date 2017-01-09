@@ -1,5 +1,26 @@
 {% extends 'portal/index.html' %}
-
+{% load staticfiles %}
 {% block centerContent %}
-    <h1>Almanac</h1>
+    <h2 class="centerhead">Almanac</h2>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#eventModal">almanac</button>
+
+    <div class="container">
+        <div class="modal" id="eventModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type = "button" class = "close" data-dismiss = "modal">&times;</button>
+                        <h3>Add Event</h3>
+                    </div>
+                    <div class="modal-body">
+                       <img src="{% static 'portal/images/alamanac-2017_s.jpg' %}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success" form="addEvent">Add Event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -3,12 +3,12 @@
 {% block centerContent %}
     <h2 class="centerhead">LogIn</h2>
 
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
-
     <form method="post" action="{% url 'userLogin' %}">
         {% csrf_token %}
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+
         <div class="form-group fieldlength" >
             <label for="email">Email :</label>
             <input type="text" class="form-control" name="email">

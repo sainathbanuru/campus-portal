@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Notices, Events
+from .models import *
 # Register your models here.
 
 admin.site.register(Notices)
 admin.site.register(Events)
+admin.site.register(Forum)

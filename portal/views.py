@@ -1,21 +1,34 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
-from .models import Notices,Events
+from .models import *
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from django.contrib.auth import authenticate,login, logout
-
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
+from .forms import *
 
 # Create your views here.
 
-def index(request):
+'''def index(request):
     all_notices = Notices.objects.all()
     content_notice = {
         'all_notices' : all_notices,
     }
     return render(request,'portal/index.html',content_notice)
+'''
 
-def events(request):
+class index(TemplateView):
+    template_name = 'portal/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(index,self).get_context_data(**kwargs)
+        context = {
+            'all_notices' : Notices.objects.all()
+        }
+        return context
+
+'''def events(request):
     all_events = Events.objects.all().order_by('-id')
     all_notices = Notices.objects.all()
     content_events = {
@@ -24,7 +37,21 @@ def events(request):
         'all_events' : all_events
     }
     return render(request, 'portal/events.html', content_events)
-@login_required
+'''
+
+class events(TemplateView):
+    template_name = 'portal/events.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(events,self).get_context_data(**kwargs)
+        context = {
+            'all_notices' : Notices.objects.all(),
+            'all_events' : Events.objects.all().order_by('-id')
+        }
+        return context
+
+
+@login_required(redirect_field_name='message')
 def almanac(request):
     all_notices = Notices.objects.all()
     content_notice = {
@@ -38,13 +65,18 @@ def timetable(request):
         'all_notices': all_notices,
     }
     return render(request,'portal/timetable.html',content_notice)
-
+'''
 def requestForm(request):
     all_notices = Notices.objects.all()
     content_notice = {
         'all_notices': all_notices,
     }
     return render(request,'portal/requestform.html',content_notice)
+'''
+
+class requestForm(FormView):
+    template_name = 'portal/requestform.html'
+    form_class = formRequest
 
 def contact(request):
     all_notices = Notices.objects.all()
@@ -106,22 +138,20 @@ def changepassword(request):
         return HttpResponseRedirect('/')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def forum(request):
+    if  request.method == 'GET':
+        all_threads = Forum.objects.all()
+        content_thread = {
+            'all_threads' : all_threads
+        }
+        return render(request,'portal/forum.html',content_thread)
+    if request.method == 'POST':
+        forum_new = Forum(
+            thread_title = request.POST['title'],
+            thread_description = request.POST['description'],
+            thread_tag= request.POST['tags'],
+            thread_user= request.user.get_full_name()
+        )
+        forum_new.save()
+        return HttpResponseRedirect('/forum')
 

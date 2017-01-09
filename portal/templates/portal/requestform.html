@@ -8,19 +8,19 @@
         {% csrf_token %}
         <div class="form-group fieldlength" >
             <label for="name">Name :</label>
-            <input type="text" class="form-control" name="name">
+            {{ form.name }}
         </div>
         <div class="form-group fieldlength">
-            <label for="Fname">Father's Name :</label>
-            <input type="text" class="form-control" name="Fname">
+            <label for="fathersName">Father's Name :</label>
+            {{ form.fathersName }}
         </div>
         <div class="form-group fieldlength">
             <label for="form_required">Form required :</label>
-            <input type="text" class="form-control" name="form_required">
+            {{ form.formRequired }}
         </div>
         <div class="form-group fieldlength">
             <label for="reason">Reason :</label>
-            <input type="text" class="form-control" name="reason">
+            {{ form.reason }}
         </div>
         <div class="btn-form">
             <button class="btn btn-success ">Submit</button>

@@ -48,7 +48,8 @@ body {
     background: white;
     margin-top: 10px;
     border-radius: 10px;
-    overflow: auto
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .col-md-2 , .col-md-7, .col-md-3{
@@ -106,6 +107,10 @@ footer{
 .fieldlength{
     padding: 20px 40px 0px 40px;
 }
+
+.alert{
+    margin:20px 40px 5px 40px;
+}
 .formfieldlength{
     padding: 20px 60px 0px 60px;
 }
@@ -145,4 +150,45 @@ footer{
     text-align: center;
     padding: 0px;
     margin: 0px;
+}
+.table{
+    margin-top: 30px;
+}
+.table th {
+    font-size: 1.2em;
+    color: crimson;
+    text-align: center;;
+    padding-top: 20px;
+}
+
+.table .centertr{
+    text-align: center;
+    padding: 20px;
+}
+.panel-group .panel-primary {
+    border: none;
+    margin:15px 15px 0px 15px;
+}
+.panel-group .panel-primary .panel-heading {
+    background: #616161;
+}
+
+.panel-group .panel-primary .panel-collapse .panel-body {
+    background: #9E9E9E;
+    color: #fff;
+}
+
+.panel-group .panel-primary .panel-body {
+    border-top-color: #6e44fc !important;
+}
+
+.accordion-toggle {
+    text-decoration: none !important;
+    display: block;
+}
+
+.panel-heading {
+    border-radius: 0;
+    padding:10px;
+
 }
