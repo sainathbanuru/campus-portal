@@ -5,3 +5,5 @@ from .models import *
 admin.site.register(Notices)
 admin.site.register(Events)
 admin.site.register(Forum)
+admin.site.register(formRequest)
+admin.site.register(Credits)

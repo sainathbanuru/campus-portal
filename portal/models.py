@@ -37,3 +37,27 @@ class Forum(models.Model):
 
     def __str__(self):
         return self.thread_title
+
+
+class formRequest(models.Model):
+    form_name = models.CharField(max_length=50)
+    form_fathersName = models.CharField(max_length=50)
+    form_required = models.CharField(max_length=50)
+    form_reason = models.TextField()
+    form_status = models.CharField(max_length=50,default='processing')
+
+    def __str__(self):
+        return self.form_name + "-" + self.form_required
+
+class Credits(models.Model):
+    flexi_core = models.IntegerField()
+    bouquet_core = models.IntegerField()
+    it_elective = models.IntegerField()
+    maths_science = models.IntegerField()
+    humanities = models.IntegerField()
+    skills = models.IntegerField()
+    btp = models.IntegerField()
+    free_elective = models.IntegerField()
+
+    def __str__(self):
+        return "Credit details"

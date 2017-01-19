@@ -1,0 +1,41 @@
+{% extends 'portal/index.html' %}
+
+{% block centerContent %}
+    <h2 class="centerhead">Credits In Detail</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Flexi - Core</th>
+                            <th>Bouquet - Core (12 credits)</th>
+                            <th>IT - Electives (16 credits)</th>
+                            <th>Maths / Science (12 credits)</th>
+                            <th>Humanities (8 credits)</th>
+                            <th>Skills (6 credits)</th>
+                            <th>BTP (8 credits)</th>
+                            <th>Free Electives (12 credits)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="centertr">
+                            {% for credit in credits %}
+                                <td><strong>{{ credit.flexi_core }}</strong></td>
+                                <td><strong>{{ credit.bouquet_core }}</strong></td>
+                                <td><strong>{{ credit.it_elective }}</strong></td>
+                                <td><strong>{{ credit.maths_science }}</strong></td>
+                                <td><strong>{{ credit.humanities }}</strong></td>
+                                <td><strong>{{ credit.skills }}</strong></td>
+                                <td><strong>{{ credit.btp }}</strong></td>
+                                <td><strong>{{ credit.free_elective }}</strong></td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

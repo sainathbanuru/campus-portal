@@ -1,0 +1,27 @@
+{% extends "administration/admin_index.html" %}
+
+{% block centerContent %}
+    <h2 class="centerhead">Add Notice</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-1 well" style="margin-top: 25px">
+                <form action="{% url 'addNotice' %}" method="post" >
+                    {% csrf_token %}
+                    <legend>Notice</legend>
+                   <div class="form-group fieldlength" >
+                        <label for="notice_title">Title :</label>
+                        <input type="text" class="form-control" name="notice_title">
+                    </div>
+                    <div class="form-group">
+                        <label for="notice_description">Description :</label>
+                        <textarea class="form-control" rows="3" name="notice_description"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from .models import *
+from administration.models import *
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
 from django.contrib.auth import authenticate,login, logout
 from django.views.generic.base import TemplateView
@@ -65,18 +66,36 @@ def timetable(request):
         'all_notices': all_notices,
     }
     return render(request,'portal/timetable.html',content_notice)
-'''
-def requestForm(request):
-    all_notices = Notices.objects.all()
-    content_notice = {
-        'all_notices': all_notices,
-    }
-    return render(request,'portal/requestform.html',content_notice)
-'''
+
+
 
 class requestForm(FormView):
     template_name = 'portal/requestform.html'
     form_class = formRequest
+
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request,self.template_name,{ 'form' : form})
+
+
+
+
+
+
+
+
+class register(FormView):
+    template_name = 'portal/register.html'
+    form_class = registerForm
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(None)
+        context = {
+            'form':form,
+            'course_details':Course.objects.all(),
+            'all_notices':Notices.objects.all()
+        }
+        return render(request,self.template_name,context)
+ x
 
 def contact(request):
     all_notices = Notices.objects.all()
@@ -155,3 +174,12 @@ def forum(request):
         forum_new.save()
         return HttpResponseRedirect('/forum')
 
+
+class credits(TemplateView):
+    template_name = 'portal/credits.html'
+    def get_context_data(self, **kwargs):
+        context = super(credits,self).get_context_data(**kwargs)
+        context = {
+            'credits': Credits.objects.all()
+        }
+        return context

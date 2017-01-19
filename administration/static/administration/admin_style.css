@@ -1,0 +1,79 @@
+body {
+    background: white url("images/background.png");
+}
+.navbar {
+    border-radius: 0;
+    background: teal;
+    border: none;
+    margin: 0;
+}
+.navbar-brand{
+    font-size: 1.5em;
+    font-family: 'Satisfy', cursive;
+}
+.navbar-inverse .navbar-brand{
+    color: cornsilk;
+}
+
+.navbar-inverse .navbar-brand:hover{
+    color: #fed136;
+}
+
+.nav.navbar-nav.navbar-right li a {
+    font-size:1.2em;
+}
+.navbar-inverse .navbar-nav li a{
+    color: #fff;
+}
+.navbar-inverse .navbar-nav li a:hover{
+    color: #fed136;
+}
+
+.navbar-nav > li > .dropdown-menu > li > a {
+    color: #000;
+}
+
+.navbar-nav > li > .dropdown-menu > li > a:hover {
+    color: red;
+    background-color: transparent;;
+}
+.navbar-toggle{
+    border: none;
+}
+
+
+
+.colHeight{
+    height: 800px;
+    background: white;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.col-md-2 , .col-md-7, .col-md-3{
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.centerText{
+    text-align: center;
+    padding:15px;
+    margin-top: 0;
+    color: white;
+    text-decoration: underline;
+    background: teal;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+}
+.centerhead{
+    text-align: center;
+    text-decoration: underline;
+}
+
+footer{
+    height: 50px;
+    background: #008080;
+    margin-top: 10px;
+}

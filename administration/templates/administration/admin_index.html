@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IIITS-campus</title>
+    <title>IIITS-Admin</title>
     {% load staticfiles %}
     <link href="https://fonts.googleapis.com/css?family=Satisfy" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'portal/bootstrap.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'portal/style.css' %}"/>
 
 
@@ -21,7 +20,7 @@
                     <span class = "icon-bar"></span>
                     <span class = "icon-bar"></span>
                 </button>
-                <a href="{% url 'index' %}" class = navbar-brand> IIITS-Campus</a>
+                <a href="{% url 'index' %}" class = navbar-brand> IIITS-Admin</a>
             </div>
             <div class = "navbar-collapse collapse" id="topNavBar">
                 <ul class = "nav navbar-nav navbar-right">
@@ -52,14 +51,10 @@
                 <div class="colHeight">
                     <h4 class="centerText">Quick Links</h4>
                     <ul>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
-                        <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
-                        <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Course registration</a></li>
-                        <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
-                        <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;OJ</a></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Cloud</a></li>
+                        <li><a href="{% url 'add-course' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Add courses</a></li>
+                        <li><a href="{% url 'addNotice' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Add Notice</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Form status</a></li>
+
                     </ul>
                 </div>
             </div>
