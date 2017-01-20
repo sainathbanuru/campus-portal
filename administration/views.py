@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from administration.models import Course
 from .forms import *
-from portal.models import Notices
+from portal.models import *
 # Create your views here.
 
 class admin_index(TemplateView):
@@ -116,3 +116,26 @@ def addNotice(request):
         )
         notice.save()
         return HttpResponseRedirect('/administration/')
+
+
+def updateFormStatus(request):
+    if request.method == 'GET':
+        return render(request,'administration/form_status.html',{})
+    if request.method =='POST':
+        req_id = request.POST['search_id']
+        return HttpResponseRedirect('/administration/update/' + req_id)
+
+
+def FormStatus(request,search_id):
+    if request.method == 'GET':
+        try :
+            requested_form = formRequest.objects.get(id=search_id)
+            return render(request, 'administration/form_status.html',{'requested_form':requested_form})
+        except formRequest.DoesNotExist:
+            return render(request, 'administration/form_status.html',{'error_message':"Enter Valid ID"})
+    if request.method == 'POST':
+        status = request.POST['status']
+        updated = formRequest.objects.get(id=search_id)
+        updated.form_status = status
+        updated.save()
+        return HttpResponseRedirect('/')

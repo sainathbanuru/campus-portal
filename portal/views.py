@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail,BadHeaderError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
 from .models import *
@@ -76,13 +77,33 @@ class requestForm(FormView):
     def get(self, request):
         form = self.form_class(None)
         return render(request,self.template_name,{ 'form' : form})
+    def post(self, request, *args, **kwargs):
+        name = request.POST['name']
+        fathersName = request.POST['fathersName']
+        formRequired = request.POST['formRequired']
+        reason = request.POST['reason']
+        if name and fathersName and formRequired and reason:
+            try:
+                send_mail("Form Request",name + " requires " + formRequired + " for" + reason,"sainath.b14@iiits.in",['sainath.b14@iiits.in'])
+            except BadHeaderError:
+                return HttpResponse("Error sending mail")
+            return HttpResponseRedirect('/')
 
 
-
-
-
-
-
+'''def formsend(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        fathersName = request.POST['fathersName']
+        formRequired = request.POST['formRequired']
+        reason = request.POST['reason']
+        if name and fathersName and formRequired and reason:
+            try:
+                send_mail("Form Request", name + " requires " + formRequired + " for" + reason, "sainath.b14@iiits.in",
+                          ['sainath.b14@iiits.in'])
+            except BadHeaderError:
+                return HttpResponse("Error sending mail")
+            return HttpResponseRedirect('/index')
+'''
 
 class register(FormView):
     template_name = 'portal/register.html'
@@ -95,7 +116,7 @@ class register(FormView):
             'all_notices':Notices.objects.all()
         }
         return render(request,self.template_name,context)
- x
+
 
 def contact(request):
     all_notices = Notices.objects.all()

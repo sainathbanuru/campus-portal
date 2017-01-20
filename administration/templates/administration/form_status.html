@@ -1,0 +1,40 @@
+{% extends 'administration/admin_index.html' %}
+
+{% block centerContent %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-1 well" style="margin-top: 25px">
+                    {% if requested_form %}
+                        <legend>Update Form Status</legend>
+                        <p>Name : {{ requested_form.form_name }}</p>
+                        <p>Father' s Name : {{ requested_form.form_fathersName }}</p>
+                        <p>Form : {{ requested_form.form_required }}</p>
+                        <p>Reason : {{ requested_form.form_reason }}</p>
+                        <form action="{% url 'formupdatestatus' requested_form.id %}" method="post">
+                        {% csrf_token %}
+                            <fieldset>
+                               <div class="form-group fieldlength" >
+                                    <label for="status" style="margin-right: 20px">status :</label>
+                                    <input type="text" class="form-control" name="status" placeholder="{{ requested_form.form_status }}" >
+                                   <button type="submit" class="btn btn-primary">submit</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'formupdate' %}" method="post"  class="form-inline">
+                        {% csrf_token %}
+                            <fieldset>
+                                <legend>Update Form Status</legend>
+                               <div class="form-group fieldlength" >
+                                    <label for="search_id" style="margin-right: 20px">search with id :</label>
+                                    <input type="number" class="form-control" name="search_id" >
+                                   <button type="submit" class="btn btn-primary">submit</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+{% endblock %}
