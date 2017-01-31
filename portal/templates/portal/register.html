@@ -1,85 +1,96 @@
 {% extends 'portal/index.html' %}
 
 {% block centerContent %}
-    <form style="margin-top: 25px">
+
+    <form style="margin-top: 25px" action="{% url 'register_course' %}" method="post" name="loginform">
+
         {% csrf_token %}
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-md-offset-1 well">
-                    <form role="form" action="{% url 'register' %}" method="post" name="loginform">
+                    <form role="form" action="{% url 'register_course' %}" method="post" name="loginform">
                         <fieldset>
+
+
                            <legend>Course Registration</legend>
 
-                           <div class="form-group fieldlength" >
-                                <label for="name">Name :</label>
-                                {{ form.name }}
-                            </div>
-                            <div class="form-group fieldlength">
-                                <label for="roll_no">Roll No. :</label>
-                                {{ form.roll_no }}
-                            </div>
-                            <div class="form-group fieldlength">
-                                <label for="form_required">Phone Number :</label>
-                                {{ form.phone_no }}
-                            </div>
-                            <div class="form-group fieldlength">
-                                <label for="reason">Parent Phone Number :</label>
-                                {{ form.parent_phone }}
-                            </div>
-                            <div class="form-group fieldlength">
-                                <label for="address">Address :</label>
-                                {{ form.address }}
-                            </div>
-                            <div class="form-group fieldlength">
+                           <div class="form-group fieldlength">
                                 <label for="address"><strong>Flexi Core :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "flexi_core" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+
+                                {% for course in FC %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 
                             </div>
+
+
                             <div class="form-group fieldlength">
                                 <label for="address"><strong>Bouquet Core :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "bc_cse" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+
+                                {% for course in BC %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 
                             </div>
+
+
                             <div class="form-group fieldlength">
                                 <label for="address"><strong>IT Elective :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "it_elective" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+
+                                {% for course in IT_el %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 
                             </div>
+
+
                             <div class="form-group fieldlength">
                                 <label for="address"><strong>Maths or Science Electtive :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "ms_elective" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+
+                                {% for course in MS_el %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 
                             </div>
+
+
                             <div class="form-group fieldlength">
                                 <label for="address"><strong>Humanitites :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "humanities" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+
+                                {% for course in H_el %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 
                             </div>
+
+
                             <div class="form-group fieldlength">
                                 <label for="address"><strong>Skills :</strong></label><br/>
-                                {% for course in course_details %}
-                                    {% if course.course_cse == "skills" %}
-                                        <input type="checkbox">&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                {% for course in S_el %}
+                                    {% if course in courses_registered %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}' checked disabled>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                    {% else %}
+                                    	<input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
                                     {% endif %}
                                 {% endfor %}
 

@@ -1,0 +1,33 @@
+{% extends 'portal/index.html' %}
+
+{% block centerContent %}
+    
+    <form style="margin-top: 25px" action="{% url 'unregister2' %}" method="post" name="loginform">
+       
+        {% csrf_token %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-1 well">
+                    <form role="form" action="{% url 'unregister2' %}" method="post" name="loginform">
+                        <fieldset>
+
+                           
+                           <legend>Select Course for Deregistering</legend>
+
+                           <div class="form-group fieldlength">
+                                
+                                <br>
+                                {% for course in courses_registered %}
+                                    <input type="checkbox" name="checks[]" value='{{course.pk}}'>&nbsp;&nbsp;<em>{{ course.course_title }} - <strong>{{ course.course_faculty }}</strong></em><br/>
+                                {% endfor %}
+
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

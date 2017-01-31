@@ -12,8 +12,16 @@ urlpatterns = [
     url(r'^contact/$',views.contact,name='contact'),
     url(r'^addEvent/',views.addEvent,name='addevent'),
     url(r'^login/',views.login_user,name='userLogin'),
+    url(r'^signup/',views.Signup.as_view(),name='signup'),
     url(r'^credits/',views.credits.as_view(),name='credits'),
     url(r'^logout/',views.logout_user,name='userLogout'),
     url(r'^changepassword/',views.changepassword,name='changepassword'),
+    url(r'^forgotPassword/',views.forgotPassword.as_view(),name='forgotPassword'),
     url(r'^administration/',include('administration.urls')),
+
+    url(r'^register_course/',views.register_course,name='register_course'),
+    url(r'^register/$', views.register.as_view(), name='register'),
+    url(r'^unregister/$', views.unregister.as_view(), name='unregister'),
+    url(r'^unregister2/$', views.unregister2, name='unregister2'),
+    url(r'^my_courses/',views.my_courses,name="my_courses"),
 ]

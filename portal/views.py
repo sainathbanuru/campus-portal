@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.core.mail import send_mail,BadHeaderError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
@@ -69,25 +70,39 @@ def timetable(request):
     return render(request,'portal/timetable.html',content_notice)
 
 
-
 class requestForm(FormView):
     template_name = 'portal/requestform.html'
-    form_class = formRequest
+    form_class = RequestForm
 
     def get(self, request):
         form = self.form_class(None)
-        return render(request,self.template_name,{ 'form' : form})
+        return render(request, self.template_name, {'form': form})
+
     def post(self, request, *args, **kwargs):
+
         name = request.POST['name']
         fathersName = request.POST['fathersName']
         formRequired = request.POST['formRequired']
         reason = request.POST['reason']
+
         if name and fathersName and formRequired and reason:
+
+            # return HttpResponse(name+fathersName+formRequired+reason)
+            formreq = formRequest(
+                form_name=name,
+                form_fathersName=fathersName,
+                form_required=formRequired,
+                form_reason=reason
+            )
+            formreq.save()
+
             try:
-                send_mail("Form Request",name + " requires " + formRequired + " for" + reason,"sainath.b14@iiits.in",['sainath.b14@iiits.in'])
+                send_mail("Form Request", name + " requires " + formRequired + " for" + reason, "sainath.b14@iiits.in",
+                          ['sainath.b14@iiits.in'])
             except BadHeaderError:
                 return HttpResponse("Error sending mail")
             return HttpResponseRedirect('/')
+
 
 
 '''def formsend(request):
@@ -103,7 +118,7 @@ class requestForm(FormView):
             except BadHeaderError:
                 return HttpResponse("Error sending mail")
             return HttpResponseRedirect('/index')
-'''
+
 
 class register(FormView):
     template_name = 'portal/register.html'
@@ -116,6 +131,84 @@ class register(FormView):
             'all_notices':Notices.objects.all()
         }
         return render(request,self.template_name,context)
+'''
+
+@method_decorator(login_required, name='dispatch')
+class register(FormView):
+    def get(self, request, *args, **kwargs):
+        userId = request.user.id
+        #return HttpResponse(user)
+        # Current User
+        User = Students.objects.get(user = userId)
+        #return HttpResponse(User.year)
+        Year_of_study = User.year
+        Branch_of_study = User.branch
+        #return HttpResponse(User.branch)
+        Courses_for_offering = []
+
+        my_courses_list = [i.Course.course_title for i in User.student_course_set.all()]
+        courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+        if Year_of_study == 1:
+            Courses_for_offering = Course.objects.filter(coursefor_ug1=True)
+        if Year_of_study == 2:
+            Courses_for_offering = Course.objects.filter(coursefor_ug2=True)
+        if Year_of_study == 3:
+            Courses_for_offering = Course.objects.filter(coursefor_ug3=True)
+            #return HttpResponse(Courses_for_offering)
+        if Year_of_study == 4:
+            Courses_for_offering = Course.objects.filter(coursefor_ug4=True)
+
+        FC = []
+        BC = []
+        IT_el = []
+        MS_el = []  # Maths + Science
+        H_el = []  # Humanities Elective
+        S_el = []  # Skills Elective
+
+        for course in Courses_for_offering:
+            #return HttpResponse(course)
+            if Branch_of_study == "CSE":
+                if course.course_cse == "flexi_core":
+
+                    FC.append(course)
+                if course.course_cse == "bc_cse":
+                    BC.append(course)
+                if course.course_cse == "it_lective":
+                    IT_el.append(course)
+
+            if Branch_of_study == "ECE":
+                if course.course_ece == "flexi_core":
+                    FC.append(course)
+                if course.course_ece == "bc_ece":
+                    BC.append(course)
+                if course.course_ece == "it_lective":
+                    IT_el.append(course)
+
+            if course.course_cse == "ms_elective":
+                MS_el.append(course)
+
+            if course.course_cse == "humanities":
+                H_el.append(course)
+
+            if course.course_cse == "skills":
+                S_el.append(course)
+
+        template_name = 'portal/register.html'
+
+        context = {
+
+            'FC': FC,
+            'BC': BC,
+            'IT_el': IT_el,
+            'MS_el': MS_el,
+            'H_el': H_el,
+            'S_el': S_el,
+
+            'all_notices': Notices.objects.all(),
+            'courses_registered': courses_registered
+        }
+        return render(request, template_name, context)
 
 
 def contact(request):
@@ -142,18 +235,25 @@ def login_user(request):
     if request.method == 'GET':
         return render(request,'portal/login.html',{})
     if request.method == "POST":
+        if "?next" in request.POST:
+            return HttpResponse(request.POST['next'])
         username = request.POST['email']
         password = request.POST['pass']
+        #return HttpResponse(username+password)
         user = authenticate(username=username, password=password)
+       # return HttpResponse(user)
+        print(user)
         if user is not None:
             if user.is_active:
                 login(request,user)
+                if "next" in request.POST:
+                    return HttpResponse(request.POST['next'])
                 return HttpResponseRedirect('/')
             else:
                 return render(request, 'portal/login.html', {'error_message': 'Your account has been disabled'})
         else:
             return render(request, 'portal/login.html', {'error_message': 'Invalid login'})
-    return render(request, 'portal/login.html')
+    return render(request, 'portal/index.html')
 
 def logout_user(request):
     logout(request)
@@ -204,3 +304,147 @@ class credits(TemplateView):
             'credits': Credits.objects.all()
         }
         return context
+
+
+class Signup(FormView):
+
+    template_name = 'portal/sign_up.html'
+    form_class = SignupForm
+
+    def get(self, request, context={}, *args, **kwargs):
+        form = self.form_class(None)
+        if context == {}:
+            context = {'form':form}
+        else:
+            context['form'] = form
+
+        return render(request, self.template_name, context)
+
+    def post(self,request,*args,**kwargs):
+        form = self.form_class(request.POST)
+
+        if form.is_valid():
+
+            name = form.cleaned_data['name']
+            student_fathersName = form.cleaned_data['fname']
+            student_roll = form.cleaned_data['roll']
+            student_email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            cpassword = form.cleaned_data['cpassword']
+
+            # Passwords are not coming correctly !!!!!!!!
+
+
+            student_phone = form.cleaned_data['phone']
+            student_branch = form.cleaned_data['branch']
+            student_year = form.cleaned_data['year']
+
+  #          return HttpResponse('done')
+
+            user = User.objects.create_user(
+                username=student_email,
+                first_name=name,
+                email=student_email
+            )
+            if password == cpassword:
+                user.set_password(password)
+            else:
+                return HttpResponse("Password did not Match")
+            user.is_active = True
+            user.save()
+
+            student = Students.objects.create(
+                user = user,
+                fathers_name = student_fathersName,
+                roll_no = student_roll,
+                email=student_email,
+                phone = student_phone,
+                branch = student_branch,
+                year = student_year
+            )
+            student.save()
+
+#            return render(request, 'portal/sign_up.html', {'form': form, "pass1": password, "pass2": cpassword})
+            return HttpResponseRedirect('/login')
+
+ #       return render(request, 'portal/sign_up.html', {'form': form, "err": "some error"})
+
+
+
+class unregister(FormView):
+    def get(self, request, *args, **kwargs):
+        current_student = Students.objects.get(user= request.user.id)
+        my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+        courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+        context = {'courses_registered': courses_registered}
+        return render(request, 'portal/unregister.html', context)
+
+
+# Runs in background
+def unregister2(request):
+    courses_selected = Course.objects.filter(id__in=request.POST.getlist('checks[]'))
+    current_student = Students.objects.get(user= request.user.id)
+
+    for course in courses_selected:
+        Student_Course.objects.filter(Student=current_student).get(Course=course).delete()
+
+    my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+    courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+    context = {'courses_registered': courses_registered, 'branch': current_student.branch}
+    return render(request, 'portal/my_courses.html', context)
+
+
+def register_course(request):
+    courses_selected = Course.objects.filter(id__in=request.POST.getlist('checks[]'))
+    current_student = Students.objects.get(user= request.user.id)
+
+    my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+    courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+    # If not exists ...
+    for current_course in courses_selected:
+        if current_course not in courses_registered:
+            s_c = Student_Course()
+            s_c.Student = current_student
+            s_c.Course = current_course
+            s_c.save()
+
+    current_student = Students.objects.get(user= request.user.id)
+    my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+    courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+    context = {'courses_registered': courses_registered, 'branch': current_student.branch}
+    return render(request, 'portal/my_courses.html', context)
+
+
+def my_courses(request):
+    # After user login is implemented.
+    # courses_registered = student_course.objects.filter(id=request.user.user_id)
+
+    current_student = Students.objects.get(user= request.user.id)
+    Branch_of_study = current_student.branch
+    my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+    courses_registered = [Course.objects.get(course_title=i) for i in my_courses_list]
+
+    context = {'courses_registered': courses_registered, 'branch': Branch_of_study}
+    return render(request, 'portal/my_courses.html', context)
+
+class forgotPassword(TemplateView):
+    template_name = 'portal/forgot_password.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template_name,{})
+
+    def post(self,request,*args,**kwargs):
+        email = request.POST['email']
+        try:
+            valid_user = User.objects.get(username=email)
+            temp_password = "sainath"
+            valid_user.set_password(temp_password)
+        except User.DoesNotExist:
+            return render(request,self.template_name,{'error_message':"Invalid Email"})
+        send_mail("Temporary password", "Your temporary password is " + temp_password , "sainath.b14@iiits.in",
+                  ['sainath.b14@iiits.in'])
+        return HttpResponseRedirect('/login')

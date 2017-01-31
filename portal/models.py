@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 # Create your models here.
+from django.contrib.auth.models import User
+from administration.models import *
 
 
 class Notices(models.Model):
@@ -43,7 +45,7 @@ class formRequest(models.Model):
     form_name = models.CharField(max_length=50)
     form_fathersName = models.CharField(max_length=50)
     form_required = models.CharField(max_length=50)
-    form_reason = models.TextField()
+    form_reason = models.CharField(max_length=100)
     form_status = models.CharField(max_length=50,default='processing')
 
     def __str__(self):
@@ -61,3 +63,24 @@ class Credits(models.Model):
 
     def __str__(self):
         return "Credit details"
+
+class Students(models.Model):
+    user = models.OneToOneField(User)
+    fathers_name = models.CharField(max_length=80)
+    roll_no = models.CharField(max_length=10)
+    email = models.EmailField()
+    phone=models.CharField(max_length=10)
+    branch = models.CharField(max_length=5)
+    year = models.IntegerField()
+
+    def __str__(self):
+        return self.user.get_full_name()
+
+
+class Student_Course(models.Model):
+
+    Course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    Student = models.ForeignKey(Students, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.Student.user.get_full_name() + " - " + self.Course.course_title

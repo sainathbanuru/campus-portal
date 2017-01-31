@@ -1,6 +1,8 @@
 {% extends 'administration/admin_index.html' %}
 
 {% block centerContent %}
+
+
     <div class = "btn-events">
        <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#eventModal" ><span class = "glyphicon glyphicon-plus"></span>&nbsp; Add Course&nbsp;</button>
     </div>
@@ -66,6 +68,9 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 table-responsive">
+
+
+                <h3><strong>&nbsp&nbspUG-1</strong></h3>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -82,39 +87,217 @@
                     </thead>
                     <tbody>
                         {% for course in courses_added %}
-                            <tr class="centertr">
-                                <td><strong>{{ course.course_title }}</strong></td>
-                                <td><strong>{{ course.course_faculty }}</strong></td>
-                                <td><strong>{{ course.course_cse }}</strong></td>
-                                <td><strong>{{ course.course_ece }}</strong></td>
-                                <td><strong>{% if course.coursefor_ug1 %}
-                                    <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
-                                    {% else %}
-                                    <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
-                                {% endif %}</strong>
-                                </td>
-                                <td><strong>{% if course.coursefor_ug2 %}
-                                    <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
-                                    {% else %}
-                                    <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
-                                {% endif %}</strong>
-                                </td>
-                                <td><strong>{% if course.coursefor_ug3 %}
-                                    <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
-                                    {% else %}
-                                    <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
-                                 {% endif %}</strong>
-                                </td>
-                                <td><strong>{% if course.coursefor_ug4 %}
-                                    <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
-                                    {% else %}
-                                    <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
-                                {% endif %}</strong>
-                                </td>
-                                <td >
-                                    <strong>spring</strong>
-                                </td>
-                            </tr>
+                            {% if course.coursefor_ug1 %}
+                                <tr class="centertr">
+                                    <td><strong>{{ course.course_title }}</strong></td>
+                                    <td><strong>{{ course.course_faculty }}</strong></td>
+                                    <td><strong>{{ course.course_cse }}</strong></td>
+                                    <td><strong>{{ course.course_ece }}</strong></td>
+                                    <td><strong>{% if course.coursefor_ug1 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug2 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug3 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                     {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug4 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td >
+                                        <strong>spring</strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+                <br><h3><strong>&nbsp&nbspUG-2</strong></h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Faculty</th>
+                            <th>CSE</th>
+                            <th>ECE</th>
+                            <th>UG1</th>
+                            <th>UG2</th>
+                            <th>UG3</th>
+                            <th>UG4</th>
+                            <th>SEM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses_added %}
+                            {% if course.coursefor_ug2 %}
+                                <tr class="centertr">
+                                    <td><strong>{{ course.course_title }}</strong></td>
+                                    <td><strong>{{ course.course_faculty }}</strong></td>
+                                    <td><strong>{{ course.course_cse }}</strong></td>
+                                    <td><strong>{{ course.course_ece }}</strong></td>
+                                    <td><strong>{% if course.coursefor_ug1 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug2 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug3 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                     {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug4 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td >
+                                        <strong>spring</strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+
+                <br><h3><strong>&nbsp&nbspUG-3</strong></h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Faculty</th>
+                            <th>CSE</th>
+                            <th>ECE</th>
+                            <th>UG1</th>
+                            <th>UG2</th>
+                            <th>UG3</th>
+                            <th>UG4</th>
+                            <th>SEM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses_added %}
+                            {% if course.coursefor_ug3 %}
+                                <tr class="centertr">
+                                    <td><strong>{{ course.course_title }}</strong></td>
+                                    <td><strong>{{ course.course_faculty }}</strong></td>
+                                    <td><strong>{{ course.course_cse }}</strong></td>
+                                    <td><strong>{{ course.course_ece }}</strong></td>
+                                    <td><strong>{% if course.coursefor_ug1 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug2 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug3 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                     {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug4 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td >
+                                        <strong>spring</strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+
+                <br><h3><strong>&nbsp&nbspUG-4</strong></h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Faculty</th>
+                            <th>CSE</th>
+                            <th>ECE</th>
+                            <th>UG1</th>
+                            <th>UG2</th>
+                            <th>UG3</th>
+                            <th>UG4</th>
+                            <th>SEM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses_added %}
+                            {% if course.coursefor_ug4 %}
+                                <tr class="centertr">
+                                    <td><strong>{{ course.course_title }}</strong></td>
+                                    <td><strong>{{ course.course_faculty }}</strong></td>
+                                    <td><strong>{{ course.course_cse }}</strong></td>
+                                    <td><strong>{{ course.course_ece }}</strong></td>
+                                    <td><strong>{% if course.coursefor_ug1 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug2 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug3 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                     {% endif %}</strong>
+                                    </td>
+                                    <td><strong>{% if course.coursefor_ug4 %}
+                                        <span class="glyphicon glyphicon-ok" style="color: limegreen;"></span>
+                                        {% else %}
+                                        <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
+                                    {% endif %}</strong>
+                                    </td>
+                                    <td >
+                                        <strong>spring</strong>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
 
                     </tbody>

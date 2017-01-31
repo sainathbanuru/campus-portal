@@ -1,0 +1,57 @@
+<!-- var: courses_registered -->
+
+{% extends 'portal/index.html' %}
+	
+{% block centerContent%}
+
+	<br><h1>&nbsp&nbspCourses you registered: </h1><br>
+
+	{% if courses_registered %}
+
+
+        {% if branch == "CSE" %}
+             <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Course Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses_registered %}
+                        <tr class="centertr">
+                            <td><strong>{{ course.course_title }}</strong></td>
+
+                            <td><strong>{{ course.course_cse }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+             </table>
+        {% endif %}
+
+        {% if branch == "ECE" %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Course Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses_registered %}
+                        <tr class="centertr">
+                            <td><strong>{{ course.course_title }}</strong></td>
+                            <td><strong>{{ course.course_cse }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+             </table>
+        {% endif %}
+
+
+	{% else %}
+		<h3>&nbsp&nbsp&nbsp&nbspNo courses taken yet !!</h3>
+	{% endif %}
+
+
+{% endblock %}

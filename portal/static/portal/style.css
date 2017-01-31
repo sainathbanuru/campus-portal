@@ -41,6 +41,10 @@ body {
     border: none;
 }
 
+.alert-danger{
+    width:60%;
+
+}
 
 
 .colHeight{
