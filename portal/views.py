@@ -133,11 +133,11 @@ class register(FormView):
         return render(request,self.template_name,context)
 '''
 
-@method_decorator(login_required, name='dispatch')
+
 class register(FormView):
     def get(self, request, *args, **kwargs):
         userId = request.user.id
-        #return HttpResponse(user)
+        #return HttpResponse(userId)
         # Current User
         User = Students.objects.get(user = userId)
         #return HttpResponse(User.year)

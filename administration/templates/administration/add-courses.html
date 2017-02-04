@@ -32,6 +32,10 @@
                                 {{ form.course_credits }}
                             </div>
                             <div class="form-group">
+                                <label for="sem">Sem :</label>
+                                {{ form.course_sem }}
+                            </div>
+                            <div class="form-group">
                                 <label for="batches">Batches Offered :</label>&nbsp;&nbsp;
                                 <label class="checkbox-inline">
                                   {{ form.coursefor_ug1 }}<strong>UG - 1</strong>
@@ -117,9 +121,7 @@
                                         <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
                                     {% endif %}</strong>
                                     </td>
-                                    <td >
-                                        <strong>spring</strong>
-                                    </td>
+                                    <td><strong>{{ course.course_sem }}</strong></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -175,9 +177,7 @@
                                         <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
                                     {% endif %}</strong>
                                     </td>
-                                    <td >
-                                        <strong>spring</strong>
-                                    </td>
+                                    <td><strong>{{ course.course_sem }}</strong></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -234,9 +234,7 @@
                                         <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
                                     {% endif %}</strong>
                                     </td>
-                                    <td >
-                                        <strong>spring</strong>
-                                    </td>
+                                    <td><strong>{{ course.course_sem }}</strong></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}
@@ -293,9 +291,7 @@
                                         <span class="glyphicon glyphicon-remove" style="color: darkred"></span>
                                     {% endif %}</strong>
                                     </td>
-                                    <td >
-                                        <strong>spring</strong>
-                                    </td>
+                                    <td><strong>{{ course.course_sem }}</strong></td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

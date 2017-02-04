@@ -12,6 +12,7 @@ class Course(models.Model):
     coursefor_ug4 = models.BooleanField(default=False)
     course_cse = models.CharField(max_length=50)
     course_ece = models.CharField(max_length=50)
+    course_sem = models.CharField(max_length=7)
 
 
 

@@ -72,7 +72,8 @@ class add_courses(FormView):
                 coursefor_ug3=course_ug3,
                 coursefor_ug4=course_ug4,
                 course_cse=coursefor_cse,
-                course_ece=coursefor_ece
+                course_ece=coursefor_ece,
+                course_sem=request.POST['course_sem']
             )
             course.save()
         return HttpResponseRedirect('/administration/add-courses/')

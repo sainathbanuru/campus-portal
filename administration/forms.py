@@ -11,6 +11,8 @@ class courses(forms.Form):
     coursefor_ug2 = BooleanField(widget=CheckboxInput(attrs={'class':'checkbox-inline','id':'ug2'}),required=False)
     coursefor_ug3 = BooleanField(widget=CheckboxInput(attrs={'class':'checkbox-inline','id':'ug3'}),required=False)
     coursefor_ug4 = BooleanField(widget=CheckboxInput(attrs={'class':'checkbox-inline','id':'ug4'}),required=False)
+    course_sem = ChoiceField(choices=sem_choices,widget=Select(attrs={'class':'form-control','id':'course_sem'}))
+
 
 class Notice(forms.Form):
     notice_title = CharField(widget=TextInput(attrs={'class':'form-control','id':'notice_title'}))

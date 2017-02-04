@@ -8,3 +8,8 @@ STATUS_CHOICES = (
     (7, ("Humanities Elective")),
     (8, ("Skills Elective")),
 )
+
+sem_choices = (
+    ("spring",("spring")),
+    ("monsoon",("monsoon")),
+)
