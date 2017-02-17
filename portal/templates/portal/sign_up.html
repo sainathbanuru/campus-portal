@@ -16,9 +16,6 @@
     {% endif %}
 
 
-    {% if error_message %}
-        {{ error_message }}
-    {% endif %}
 
 
     {% if form.errors %}
@@ -30,7 +27,7 @@
             {% endfor %}
         {% endfor %}
         {% for error in form.non_field_errors %}
-            <div class="alert alert-danger">
+            <div class=" alert-danger">
                 <strong>{{ error|escape }}</strong>
             </div>
         {% endfor %}
@@ -47,6 +44,9 @@
                     {% csrf_token %}
                     <fieldset>
                         <legend>Sign Up</legend>
+                        {% if error_message %}
+                           <p class=" alert alert-danger">{{ error_message }}</p>
+                        {% endif %}
 
                         <div class="form-group">
                             <label for="name">Name</label>

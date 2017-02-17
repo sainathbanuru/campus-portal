@@ -4,7 +4,8 @@ from .choices import *
 
 class courses(forms.Form):
     course_title = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'course_title'}))
-    course_faculty = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'course_faculty'}))
+    #course_faculty = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'course_faculty'}))
+    course_faculty = ChoiceField(choices=faculty_list,widget=Select(attrs={'class':'form-control','id':'course_faculty'}))
     course_type = ChoiceField(choices=STATUS_CHOICES,widget=Select(attrs={'class':'form-control','id':'course_type'}))
     course_credits = IntegerField(max_value=16,widget=NumberInput(attrs={'class' : 'form-control','id':'course_credits'}))
     coursefor_ug1 = BooleanField(widget=CheckboxInput(attrs={'class':'checkbox-inline','id':'ug1'}),required=False,)

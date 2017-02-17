@@ -1,5 +1,11 @@
 from django.conf.urls import url,include
 from . import views
+from rest_framework import routers
+
+
+router = routers.DefaultRouter()
+#router.register(r'users', views.UserViewSet.as_view())
+
 
 urlpatterns = [
     url(r'^$',views.index.as_view(),name="index"),
@@ -24,4 +30,8 @@ urlpatterns = [
     url(r'^unregister/$', views.unregister.as_view(), name='unregister'),
     url(r'^unregister2/$', views.unregister2, name='unregister2'),
     url(r'^my_courses/',views.my_courses,name="my_courses"),
+    url(r'^', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'users/',views.UserViewSet,name='user')
+
 ]

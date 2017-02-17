@@ -9,3 +9,7 @@ year = (
     (3,"UG -3"),
     (4,"UG -4")
 )
+forms_type = (
+    ("bonafide","bonafide"),
+    ("marks sheet","Marks Sheet"),
+)

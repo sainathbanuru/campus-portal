@@ -18,3 +18,12 @@ class Course(models.Model):
 
     def __str__(self):
         return self.course_title + " - " + self.course_faculty
+
+    class Attendance(models.Model):
+        student_rollno = models.CharField(max_length=11)
+        course_title = models.CharField(max_length=50)
+        present = models.TextField(default="0-0-0000")
+        absent = models.TextField(default="0-0-0000")
+
+        def __str__(self):
+            return self.student_rollno + " - " + self.course_title

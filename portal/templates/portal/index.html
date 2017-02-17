@@ -51,16 +51,25 @@
             <div class = "col-md-2" >
                 <div class="colHeight">
                     <h4 class="centerText">Quick Links</h4>
-                    <ul>
-                        <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Course registration</a></li>
-                        <li><a href="{% url 'my_courses' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Courses Opted</a></li>
-                        <li><a href="{% url 'unregister' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Unregister a Course</a></li>
-{#                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>#}
-                        <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
-                        <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
-                        <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
-                        <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
-                    </ul>
+                    {% if admin %}
+                        <ul>
+                            <li><a href="{% url 'add-course' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Add courses</a></li>
+                            <li><a href="{% url 'addNotice' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Add Notice</a></li>
+                            <li><a href="{% url 'formupdate' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Form status</a></li>
+                        </ul>
+
+                    {% else %}
+                        <ul>
+                            <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Course registration</a></li>
+                            <li><a href="{% url 'my_courses' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Courses Opted</a></li>
+                            <li><a href="{% url 'unregister' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Unregister a Course</a></li>
+                            {#<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>#}
+                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
+                            <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
+                            <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
+                            <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
             <div class = col-md-7>

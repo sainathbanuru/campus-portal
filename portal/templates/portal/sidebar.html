@@ -1,0 +1,17 @@
+{% extends 'portal/index.html' %}
+
+{% if user|has_group:'student' %}
+    {% block sidebar %}
+        <h4 class="centerText">Quick Links</h4>
+            <ul>
+                <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Course registration</a></li>
+                <li><a href="{% url 'my_courses' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Courses Opted</a></li>
+                <li><a href="{% url 'unregister' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Unregister a Course</a></li>
+                {#<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>#}
+                <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
+                <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
+                <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
+                <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
+            </ul>
+    {% endblock %}
+{% endif %}

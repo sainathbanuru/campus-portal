@@ -39,29 +39,29 @@ class add_courses(FormView):
 
         course_type = request.POST['course_type']
         if int(course_type) == 1:
-            coursefor_cse = "flexi_core"
-            coursefor_ece = "flexi_core"
+            coursefor_cse = "Flexi Core"
+            coursefor_ece = "Flexi Core"
         if int(course_type) == 2:
-            coursefor_cse = "flexi_core"
-            coursefor_ece = "it_elective"
+            coursefor_cse = "Flexi Core"
+            coursefor_ece = "IT Elective"
         if int(course_type) == 3:
-            coursefor_cse = "it_elective"
-            coursefor_ece = "flexi_core"
+            coursefor_cse = "IT Elective"
+            coursefor_ece = "Flexi Core"
         if int(course_type) == 4:
-            coursefor_cse = "bc_cse"
-            coursefor_ece = "it_elective"
+            coursefor_cse = "BC CSE"
+            coursefor_ece = "IT Elective"
         if int(course_type) == 5:
-            coursefor_cse = "it_elective"
-            coursefor_ece = "bc_ece"
+            coursefor_cse = "IT Elective"
+            coursefor_ece = "BC ECE"
         if int(course_type) == 6:
-            coursefor_cse = "ms_elective"
-            coursefor_ece = "ms_elective"
+            coursefor_cse = "M/S Elective"
+            coursefor_ece = "M/S Elective"
         if int(course_type) == 7:
-            coursefor_cse = "humanities"
-            coursefor_ece = "humanities"
+            coursefor_cse = "Humanities"
+            coursefor_ece = "Humanities"
         if int(course_type) == 8:
-            coursefor_cse = "skills"
-            coursefor_ece = "skills"
+            coursefor_cse = "Skills"
+            coursefor_ece = "Skills"
         if form.is_valid():
             course = Course(
                 course_title=request.POST['course_title'],

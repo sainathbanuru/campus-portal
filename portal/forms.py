@@ -5,7 +5,7 @@ from portal.choices import *
 class RequestForm(forms.Form):
     name = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'name'}))
     fathersName = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'fathersName'}))
-    formRequired = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'formRequired'}))
+    formRequired = ChoiceField(choices=forms_type,widget=Select(attrs={'class':'form-control','id':'formRequired'}))
     reason = CharField(widget=TextInput(attrs={'class' : 'form-control','id':'reason'}))
 
 class RegisterForm(forms.Form):

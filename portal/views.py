@@ -3,6 +3,8 @@ from django.utils.decorators import method_decorator
 from django.core.mail import send_mail,BadHeaderError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
+
+from portal.serializers import UserSerializer
 from .models import *
 from administration.models import *
 from django.views.generic.edit import CreateView,UpdateView,DeleteView
@@ -10,7 +12,8 @@ from django.contrib.auth import authenticate,login, logout
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 from .forms import *
-
+from django.contrib.auth.models import User, Group
+from rest_framework import viewsets
 # Create your views here.
 
 '''def index(request):
@@ -20,16 +23,31 @@ from .forms import *
     }
     return render(request,'portal/index.html',content_notice)
 '''
+def has_group(user, group_name):
+    group = Group.objects.get(name=group_name)
+    return True if group in user.groups.all() else False
+
 
 class index(TemplateView):
     template_name = 'portal/index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(index,self).get_context_data(**kwargs)
+    def get(self, request, *args, **kwargs):
         context = {
-            'all_notices' : Notices.objects.all()
+            'all_notices': Notices.objects.all(),
         }
-        return context
+
+        if request.user.groups.filter(name='student').exists():
+            context = {
+                'all_notices': Notices.objects.all(),
+                'student': 'student'
+            }
+
+        if request.user.groups.filter(name='admin').exists():
+            context = {
+                'all_notices': Notices.objects.all(),
+                'admin': 'admin'
+            }
+        return render(request, 'portal/index.html', context)
 
 '''def events(request):
     all_events = Events.objects.all().order_by('-id')
@@ -44,31 +62,52 @@ class index(TemplateView):
 
 class events(TemplateView):
     template_name = 'portal/events.html'
+    def get(self, request, *args, **kwargs):
+        if request.user.groups.filter(name='student').exists():
+            context = {
+                'all_notices': Notices.objects.all(),
+                'all_events': Events.objects.all().order_by('-id'),
+                'student':'student'
+            }
 
-    def get_context_data(self, **kwargs):
-        context = super(events,self).get_context_data(**kwargs)
-        context = {
-            'all_notices' : Notices.objects.all(),
-            'all_events' : Events.objects.all().order_by('-id')
-        }
-        return context
+        if request.user.groups.filter(name='admin').exists():
+            context = {
+                'all_notices': Notices.objects.all(),
+                'all_events': Events.objects.all().order_by('-id'),
+                'admin': 'admin'
+            }
+
+        return render(request,self.template_name,context)
 
 
 @login_required(redirect_field_name='message')
 def almanac(request):
-    all_notices = Notices.objects.all()
-    content_notice = {
-        'all_notices': all_notices,
-    }
-    return render(request,'portal/almanac.html',content_notice)
+    if request.user.groups.filter(name='student').exists():
+        context = {
+            'all_notices': Notices.objects.all(),
+            'student': 'student'
+        }
+
+    if request.user.groups.filter(name='admin').exists():
+        context = {
+            'all_notices': Notices.objects.all(),
+            'admin': 'admin'
+        }
+    return render(request,'portal/almanac.html',context)
 
 def timetable(request):
-    all_notices = Notices.objects.all()
-    content_notice = {
-        'all_notices': all_notices,
-    }
-    return render(request,'portal/timetable.html',content_notice)
+    if request.user.groups.filter(name='student').exists():
+        context = {
+            'all_notices': Notices.objects.all(),
+            'student': 'student'
+        }
 
+    if request.user.groups.filter(name='admin').exists():
+        context = {
+            'all_notices': Notices.objects.all(),
+            'admin': 'admin'
+        }
+    return render(request,'portal/timetable.html',context)
 
 class requestForm(FormView):
     template_name = 'portal/requestform.html'
@@ -245,10 +284,14 @@ def login_user(request):
         print(user)
         if user is not None:
             if user.is_active:
-                login(request,user)
                 if "next" in request.POST:
                     return HttpResponse(request.POST['next'])
-                return HttpResponseRedirect('/')
+                if user.groups.filter(name='student').exists():
+                    login(request, user)
+                    return render(request, 'portal/index.html', {'student':'student'})
+                if user.groups.filter(name='admin').exists():
+                    login(request, user)
+                    return render(request, 'portal/index.html', {'admin': 'admin'})
             else:
                 return render(request, 'portal/login.html', {'error_message': 'Your account has been disabled'})
         else:
@@ -333,7 +376,8 @@ class Signup(FormView):
             cpassword = form.cleaned_data['cpassword']
 
             # Passwords are not coming correctly !!!!!!!!
-
+            if password != cpassword:
+                return render(request,'portal/sign_up.html',{'form':form,'error_message':'passwords didnot match'})
 
             student_phone = form.cleaned_data['phone']
             student_branch = form.cleaned_data['branch']
@@ -346,11 +390,9 @@ class Signup(FormView):
                 first_name=name,
                 email=student_email
             )
-            if password == cpassword:
-                user.set_password(password)
-            else:
-                return HttpResponse("Password did not Match")
+            user.set_password(password)
             user.is_active = True
+            user.groups = [Group.objects.get(name='student')]
             user.save()
 
             student = Students.objects.create(
@@ -448,3 +490,8 @@ class forgotPassword(TemplateView):
         send_mail("Temporary password", "Your temporary password is " + temp_password , "sainath.b14@iiits.in",
                   ['sainath.b14@iiits.in'])
         return HttpResponseRedirect('/login')
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
