@@ -2,11 +2,7 @@
 
 {% block centerContent %}
     <h2 class="centerhead">LogIn</h2>
-    {% if error_message %}
-        <div class="col-sm-offset-2 well"  >
-            <p class="alert alert-danger ">{{ error_message }}</p>
-        </div>
-    {% endif %}
+
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-2 well">
@@ -14,7 +10,9 @@
                     {% csrf_token %}
                     <fieldset>
                         <legend>Login</legend>
-
+                        {% if error_message %}
+                            <p style="color: darkred;"><span class="glyphicon glyphicon-remove"></span>&nbsp; &nbsp;{{ error_message }}</p>
+                        {% endif %}
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="text" name="email" placeholder="Your Email" required class="form-control" />

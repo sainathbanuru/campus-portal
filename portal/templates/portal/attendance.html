@@ -1,0 +1,33 @@
+{% extends 'portal/index.html' %}
+
+
+{% block centerContent %}
+	
+	{% if attendence %}
+        <h1>{{ attendence.course_title }}</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Present</th>
+                    <th>Absent</th>
+                </tr>
+            </thead>
+            <tbody>
+                   <tr class="centertr">
+                       <td>{% for date in present %}
+                           {{ date }}<br/>
+                       {% endfor %}
+                       </td>
+                       <td>{% for date in absent %}
+                           {{ date }}<br/>
+                       {% endfor %}
+                       </td>
+                   </tr>
+            </tbody>
+        </table>
+        <h5>Total number of classes present = <strong>{{ present|length}}</strong></h5>
+        <h5>Total number of classes absent = <strong>{{ absent|length}}</strong></h5>
+    {% else %}
+        <h2>No data found</h2>
+    {% endif %}
+{% endblock %}

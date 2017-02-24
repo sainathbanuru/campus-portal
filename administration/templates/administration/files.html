@@ -1,0 +1,11 @@
+{% extends 'administration/admin_index.html' %}
+
+{% block centerContent %}
+	{% if files %}
+		{% for file in files %}
+			<a href="{% url 'admin_attendance' file %}">{{ file }}</a>
+		{% endfor %}
+	{% else %}
+		<h2>There are no files in Data base</h2>
+	{% endif %}
+{% endblock %}

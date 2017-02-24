@@ -56,6 +56,9 @@
                             <li><a href="{% url 'add-course' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Add courses</a></li>
                             <li><a href="{% url 'addNotice' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Add Notice</a></li>
                             <li><a href="{% url 'formupdate' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Form status</a></li>
+                            <li><a href="{% url 'attendance_upload' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendance</a></li>
+                            <li><a href="{% url 'credit_upload' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits</a></li>
+
                         </ul>
 
                     {% else %}
@@ -64,7 +67,7 @@
                             <li><a href="{% url 'my_courses' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Courses Opted</a></li>
                             <li><a href="{% url 'unregister' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Unregister a Course</a></li>
                             {#<li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; Results</a></li>#}
-                            <li><a href="#"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
+                            <li><a href="{% url 'attendance' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
                             <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
                             <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
                             <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>

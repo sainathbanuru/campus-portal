@@ -1,3 +1,4 @@
+import xlrd as xlrd
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.mail import send_mail,BadHeaderError
@@ -60,23 +61,39 @@ class index(TemplateView):
     return render(request, 'portal/events.html', content_events)
 '''
 
+class AttendanceDisplay(TemplateView):
+    template_name = 'portal/attendance.html'
+
+    def get(self, request, *args, **kwargs):
+        student = Students.objects.get(user=request.user.id)
+        attendence = Attendance.objects.get(student_rollno=student.roll_no + '.0')
+        present = attendence.present.split(',')
+        present_dates = '\n'.join(present)
+        absent = attendence.absent.split(',')
+        context = {
+            'attendence': attendence,
+            'present': present,
+            'absent': absent
+        }
+        return render(request,self.template_name,context)
+
+
 class events(TemplateView):
     template_name = 'portal/events.html'
     def get(self, request, *args, **kwargs):
-        if request.user.groups.filter(name='student').exists():
-            context = {
-                'all_notices': Notices.objects.all(),
-                'all_events': Events.objects.all().order_by('-id'),
-                'student':'student'
-            }
-
+        context = {}
         if request.user.groups.filter(name='admin').exists():
             context = {
                 'all_notices': Notices.objects.all(),
                 'all_events': Events.objects.all().order_by('-id'),
                 'admin': 'admin'
             }
-
+        else:
+            context = {
+                'all_notices': Notices.objects.all(),
+                'all_events': Events.objects.all().order_by('-id'),
+                'student': 'student'
+            }
         return render(request,self.template_name,context)
 
 
@@ -311,8 +328,6 @@ def changepassword(request):
         }
         return render(request,'portal/changepassword.html',content_notice)
     if request.method == 'POST':
-        request.user.first_name = request.POST['name']
-        request.user.email = request.POST['email']
         if request.POST['password'] == request.POST['rpassword']:
             request.user.set_password(request.POST['password'])
         else:
@@ -374,7 +389,7 @@ class Signup(FormView):
             student_email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             cpassword = form.cleaned_data['cpassword']
-
+            default_email = "@iiits.in"
             # Passwords are not coming correctly !!!!!!!!
             if password != cpassword:
                 return render(request,'portal/sign_up.html',{'form':form,'error_message':'passwords didnot match'})
@@ -384,6 +399,19 @@ class Signup(FormView):
             student_year = form.cleaned_data['year']
 
   #          return HttpResponse('done')
+            all_users = User.objects.all()
+            for i in all_users:
+                if i.username == student_email:
+                    return render(request, 'portal/sign_up.html',
+                                  {'form': form, 'error_message': 'Email already exists'})
+
+            a,b,c,d = "is","IS","Is","iS"
+            if a in student_roll or b in student_roll or c in student_roll or d in student_roll:
+                return render(request, 'portal/sign_up.html', {'form': form, 'error_message': 'Don\'t use \"IS\" in your roll number'})
+
+            if default_email not in student_email:
+                return render(request, 'portal/sign_up.html',
+                              {'form': form, 'error_message': 'Use only IIITS Mail'})
 
             user = User.objects.create_user(
                 username=student_email,
@@ -495,3 +523,29 @@ class forgotPassword(TemplateView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+@method_decorator(login_required, name='dispatch')
+class credits(TemplateView):
+    template_name = 'portal/credits.html'
+
+    def get(self,request,*args,**kwargs):
+        file_location = "C:/Django/studentPortal/media/Sample_Data.xlsx"
+        workbook = xlrd.open_workbook(file_location)
+        sheet = workbook.sheet_by_index(0)
+        string = ""
+        student = Students.objects.get(user = request.user.id)
+        for i in range(6, sheet.nrows):
+
+            rollno = str(sheet.cell_value(i, 1))
+            if(rollno == "IS"+student.roll_no):
+                for j in range(4, sheet.ncols):
+
+                    if sheet.cell_value(5, j) == "Credits Total":
+
+                        string  = string + str(sheet.cell_value(i, j)) + ","
+
+        context = super(credits,self).get_context_data(**kwargs)
+        context = {
+            'credits': string.split(',')
+        }
+        return render(request,self.template_name,context)
