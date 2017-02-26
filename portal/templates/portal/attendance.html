@@ -1,33 +1,158 @@
 {% extends 'portal/index.html' %}
 
+{% block centerContent%}
 
-{% block centerContent %}
-	
-	{% if attendence %}
-        <h1>{{ attendence.course_title }}</h1>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Present</th>
-                    <th>Absent</th>
-                </tr>
-            </thead>
-            <tbody>
-                   <tr class="centertr">
-                       <td>{% for date in present %}
-                           {{ date }}<br/>
-                       {% endfor %}
-                       </td>
-                       <td>{% for date in absent %}
-                           {{ date }}<br/>
-                       {% endfor %}
-                       </td>
-                   </tr>
-            </tbody>
-        </table>
-        <h5>Total number of classes present = <strong>{{ present|length}}</strong></h5>
-        <h5>Total number of classes absent = <strong>{{ absent|length}}</strong></h5>
+    
+    <br><strong><h2>&nbsp&nbsp <u>Your Courses: </u></h2></strong><br>
+
+    
+    {% if courses_registered %}
+
+        <ul>
+
+            {% if branch == "CSE" %}
+                    
+                <li>
+
+                    <div class="panel-group" id="UniqueName">
+                    {% for course in courses_registered %}
+                        
+                        <div class="panel panel-default">
+                         
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#UniqueName" href="#collapse{{ forloop.counter }}">
+                                        &nbsp&nbsp <strong>{{ course.course_title }}</strong> - {{ course.course_cse }}
+                                    </a>
+
+                                </h4>
+                            </div>
+                         
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse " style="height: auto;">
+                                <div class="panel-body">
+                                    <form class="form-inline" style="margin-bottom: 10px">
+                                        <div class="form-group ">
+                                            
+
+                                            <table class="table table-bordered">
+
+                                                {# Checking whether current course is there in our data on absent dates!! #}
+                                                {% if course.course_title in absent_on %}
+
+
+                                                    {# Months: {Month: [date1, date2, ...], ...} #}
+                                                    {% with absent_on|get_item:course.course_title as Months %}
+
+                                                        {% for month in Months %}
+                                                            <tr>
+                                                                <td><h5><strong>&nbsp&nbsp {{ month }}</strong></h5></td>
+
+                                                                {# Dates: [date1, date2, ...] #}
+                                                                {% with Months|get_item:month as Dates %}
+                                                                
+                                                                    {% for date in Dates %}
+                                                                        <td> <h6>{{ date.day }}</h6> </td>
+                                                                    {% endfor %}
+
+                                                                {% endwith %}
+                                                            </tr>
+                                                        {% endfor %}
+                                                    
+                                                    {% endwith %}
+                                                {% endif %}
+
+                                            </table>
+                                        
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    {% endfor %}
+                
+                    </div>
+                </li>
+
+            {% endif %}
+
+
+
+            {% if branch == "ECE" %}
+                
+                <li>
+
+                    <div class="panel-group" id="UniqueName">
+                    {% for course in courses_registered %}
+                        
+                        <div class="panel panel-default">
+                         
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#UniqueName" href="#collapse{{ forloop.counter }}">
+                                        &nbsp&nbsp <strong>{{ course.course_title }}</strong> - {{ course.course_cse }}
+                                    </a>
+
+                                </h4>
+                            </div>
+                         
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse " style="height: auto;">
+                                <div class="panel-body">
+                                    <form class="form-inline" style="margin-bottom: 10px">
+                                        <div class="form-group ">
+                                            
+
+                                            <table class="table table-bordered">
+
+                                                {# Checking whether current course is there in our data on absent dates!! #}
+                                                {% if course.course_title in absent_on %}
+
+
+                                                    {# Months: {Month: [date1, date2, ...], ...} #}
+                                                    {% with absent_on|get_item:course.course_title as Months %}
+
+                                                        {% for month in Months %}
+                                                            <tr>
+                                                                <td><b><h5>&nbsp&nbsp {{ month }}</h5></b></td>
+
+                                                                {# Dates: [date1, date2, ...] #}
+                                                                {% with Months|get_item:month as Dates %}
+                                                                
+                                                                    {% for date in Dates %}
+                                                                        <td> <h6>{{ date.day }}</h6> </td>
+                                                                    {% endfor %}
+
+                                                                {% endwith %}
+                                                            </tr>
+                                                        {% endfor %}
+                                                    
+                                                    {% endwith %}
+                                                {% endif %}
+
+                                            </table>
+                                        
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    {% endfor %}
+                
+                    </div>
+                </li>
+
+            {% endif %}
+
+
+        </ul>
+
     {% else %}
-        <h2>No data found</h2>
+
+        <h3>&nbsp&nbsp&nbsp&nbsp No courses taken yet !!</h3>
+    
     {% endif %}
+    
 {% endblock %}

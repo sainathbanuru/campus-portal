@@ -51,20 +51,9 @@ class formRequest(models.Model):
     def __str__(self):
         return self.form_name + "-" + self.form_required
 
-class Credits(models.Model):
-    flexi_core = models.IntegerField()
-    bouquet_core = models.IntegerField()
-    it_elective = models.IntegerField()
-    maths_science = models.IntegerField()
-    humanities = models.IntegerField()
-    skills = models.IntegerField()
-    btp = models.IntegerField()
-    free_elective = models.IntegerField()
-
-    def __str__(self):
-        return "Credit details"
 
 class Students(models.Model):
+    
     user = models.OneToOneField(User)
     fathers_name = models.CharField(max_length=80)
     roll_no = models.CharField(max_length=10)
@@ -84,3 +73,25 @@ class Student_Course(models.Model):
 
     def __str__(self):
         return self.Student.user.get_full_name() + " - " + self.Course.course_title
+
+
+class Credits(models.Model):
+    
+
+    student_roll_no = models.CharField(max_length=9)
+
+    core = models.IntegerField(default=0)
+    bouquet_core = models.IntegerField(default=0)
+    it_elective = models.IntegerField(default=0)
+    skills = models.IntegerField(default=0)
+    science = models.IntegerField(default=0)
+    humanities = models.IntegerField(default=0)
+    maths = models.IntegerField(default=0)
+    btp_honors = models.IntegerField(default=0)
+    additional_projects = models.IntegerField(default=0)
+    free_elective = models.IntegerField(default=0)
+    total_credits = models.IntegerField(default=0)
+
+    
+    def __str__(self):
+        return self.student_roll_no

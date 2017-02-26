@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^attendance_upload/$', views.AttendancefilesCreate.as_view(), name="attendance_upload"),
     #url(r'^attendance_success/$', views.Attendance_admin.as_view(), name="attendance_success"),
     url(r'^files/$', views.Files.as_view(), name="files"),
-    url(r'^credit_upload/$', views.credit_upload.as_view(), name="credit_upload"),
-url(r'^upload_success/$', views.Upload_success.as_view(), name="upload_success"),
+    url(r'^credit_upload/$', views.CreditdetailsCreate.as_view(), name="credit_upload"),
+    url(r'^upload_success/(?P<pk>[0-9]+)/$', views.Upload_success, name="upload_success"),
+
+    url(r'^check_attendance/',views.check_attendance,name="check_attendance"),
 ]

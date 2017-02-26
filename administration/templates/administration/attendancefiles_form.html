@@ -2,15 +2,21 @@
 
 
 {% block centerContent %}
-	<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		{% include 'administration/form_template.html' %}
-		<div class="form-group">
-			<div class="col-sm-offset-02 col-sm-10">
-				<button type="submit" class="btn btn-success">Submit</button>
+
+	<br>
+	<h1>&nbsp&nbsp Upload Attendance file here: </h1>
+	<div class = col-md-1></div>
+	<div class = col-md-6>
+		<form class="form-horizontal" action="" method="post" enctype="multipart/form-data" style="margin-top: 50px">
+			{% csrf_token %}
+			{% include 'administration/form_template.html' %}
+			<div class="form-group">
+				<div class="col-sm-offset-02 col-sm-10">
+					<button type="submit" class="btn btn-success">Submit</button>
+				</div>
 			</div>
-		</div>
-	</form>
+		</form>
+	</div>
 
 {% endblock %}
 <!--{% url 'attendance_success' %}-->

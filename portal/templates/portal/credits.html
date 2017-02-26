@@ -1,41 +1,104 @@
 {% extends 'portal/index.html' %}
 
 {% block centerContent %}
-    <h2 class="centerhead">Credits In Detail</h2>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Flexi - Core</th>
-                            <th>Bouquet - Core (12 credits)</th>
-                            <th>IT - Electives (16 credits)</th>
-                            <th>Maths / Science (12 credits)</th>
-                            <th>Humanities (8 credits)</th>
-                            <th>Skills (6 credits)</th>
-                            <th>BTP (8 credits)</th>
-                            <th>Free Electives (12 credits)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="centertr">
-                            {% for credit in credits %}
-                                <td><strong>{{ credit.flexi_core }}</strong></td>
-                                <td><strong>{{ credit.bouquet_core }}</strong></td>
-                                <td><strong>{{ credit.it_elective }}</strong></td>
-                                <td><strong>{{ credit.maths_science }}</strong></td>
-                                <td><strong>{{ credit.humanities }}</strong></td>
-                                <td><strong>{{ credit.skills }}</strong></td>
-                                <td><strong>{{ credit.btp }}</strong></td>
-                                <td><strong>{{ credit.free_elective }}</strong></td>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
+    {% if error_message %}
+
+        <h2 class="centerhead">{{ error_message }}</h2>
+
+
+    {% else %}
+
+        <h2 class="centerhead">Credits In Detail</h2>
+
+        <br>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    
+                    <table class="table table-bordered" style="margin-left:75px;">
+                        
+                        <thead>
+                            <th><h3><strong>Course Type</strong></h3></th>
+                            <th><h3><strong>To Do</strong></h3></th>
+                            <th><h3><strong>Completed</strong></h3></th>
+                        </thead>
+                        
+                        <tbody>
+                            <tr class="centertr">
+                                <td><strong>Core</strong></td>
+                                <td><strong>94</strong></td>
+                                <td><strong>{{ core }}</strong></td>
+                            </tr>
+                            
+                            <tr class="centertr">
+                                <td><strong>Bouquet - Core</strong></td>
+                                <td><strong>12</strong></td>
+                                <td><strong>{{ bouquet_core }}</strong></td>
+                            </tr>
+                            
+                            <tr class="centertr">
+                                <td><strong>IT - Electives</strong></td>
+                                <td><strong>16</strong></td>
+                                <td><strong>{{ it_elective }}</strong></td>
+                            </tr>
+                            
+                            <tr class="centertr">
+                                <td><strong>Skills</strong></td>
+                                <td><strong>6</strong></td>
+                                <td><strong>{{ skills }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>Science</strong></td>
+                                <td><strong>8</strong></td>
+                                <td><strong>{{ science }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>Humanities</strong></td>
+                                <td><strong>8</strong></td>
+                                <td><strong>{{ humanities }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>Maths</strong></td>
+                                <td><strong>4</strong></td>
+                                <td><strong>{{ maths }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>BTP/Honors</strong></td>
+                                <td><strong>16</strong></td>
+                                <td><strong>{{ credit.btp_honors }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>Additional Projects</strong></td>
+                                <td><strong>-</strong></td>
+                                <td><strong>{{ additional_projects }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <td><strong>Free Electives</strong></td>
+                                <td><strong>12</strong></td>
+                                <td><strong>{{ free_elective }}</strong></td>
+                            </tr>
+
+                            <tr class="centertr">
+                                <th><h3><strong>Total</strong></h3></th>
+                                <td><h3><strong>176</strong></h3></td>
+                                <td><h3><strong>{{ total_credits }}</strong></h3></td>
+                            </tr>
+
+                        </tbody>
+                        
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+
+
+    {% endif %}
 
 {% endblock %}

@@ -9,45 +9,38 @@
 	{% if courses_registered %}
 
 
-        {% if branch == "CSE" %}
-             <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th>Course Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for course in courses_registered %}
-                        <tr class="centertr">
-                            <td><strong>{{ course.course_title }}</strong></td>
-
-                            <td><strong>{{ course.course_cse }}</strong></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-             </table>
-        {% endif %}
-
-        {% if branch == "ECE" %}
+        <div class = "col-md-10">
+            
             <table class="table table-bordered">
+            
                 <thead>
                     <tr>
                         <th>Course</th>
                         <th>Course Type</th>
                     </tr>
                 </thead>
+            
                 <tbody>
                     {% for course in courses_registered %}
                         <tr class="centertr">
                             <td><strong>{{ course.course_title }}</strong></td>
-                            <td><strong>{{ course.course_cse }}</strong></td>
+
+                            {% if branch == "CSE" %}
+                                <td><strong>{{ course.course_cse }}</strong></td>
+
+                            {% elif branch == "ECE" %}
+                                <td><strong>{{ course.course_ece }}</strong></td>
+
+                            {% endif %}
+
                         </tr>
                     {% endfor %}
                 </tbody>
-             </table>
-        {% endif %}
 
+             </table>
+         
+         </div>
+    
 
 	{% else %}
 		<h3>&nbsp&nbsp&nbsp&nbspNo courses taken yet !!</h3>

@@ -4,9 +4,10 @@ STATUS_CHOICES = (
     (3, ("Flexi Core - ECE")),
     (4, ("BC - CSE")),
     (5, ("BC - ECE")),
-    (6, ("Maths or Science Elective")),
-    (7, ("Humanities Elective")),
-    (8, ("Skills Elective")),
+    (6, ("IT Elective")),
+    (7, ("Maths or Science Elective")),
+    (8, ("Humanities Elective")),
+    (9, ("Skills Elective")),
 )
 
 sem_choices = (

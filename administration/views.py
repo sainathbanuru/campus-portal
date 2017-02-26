@@ -5,23 +5,252 @@ from django.views.generic.edit import FormView,CreateView
 from administration.models import Course
 from .forms import *
 from portal.models import *
-# Create your views here.
+from datetime import date
 import xlrd
 import time
+
+
+def check_attendance(request):
+
+    
+    template_name = 'administration/check_attendance.html'
+    data = {}
+    courses = Course.objects.all()
+
+    for course in courses:
+
+        # Find all students who opted the course....
+        students_opted = [i.Student for i in course.student_course_set.all()]
+        for student in students_opted:
+
+            student_name = student.user.get_full_name()
+
+            # Compute attendance....
+            absent_on = list(set([i.date for i in Attendance.objects.filter(student_rollno=student.roll_no).filter(course_title=course.course_title).filter(status="A") ]))
+
+            
+            '''# Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
+            month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            month_dic = {}
+            
+            
+            for date in absent_on:
+                
+                t_month = month_names[ date.month - 1]
+                if t_month not in month_dic:
+                    month_dic[t_month] = [date]
+                else:
+                    month_dic[t_month] += [date]'''
+            
+
+
+            if course in data:
+                data[course][student_name] = absent_on
+                
+            else:
+                data[course] = {student_name: absent_on}
+
+
+
+
+
+    context = {
+        'data' : data,
+        'all_notices' : Notices.objects.all()
+    }
+    return render(request, template_name, context)
+
+
+
+class AttendancefilesCreate(CreateView):
+    model = Attendancefiles
+    fields = ['file']
+
+
+def admin_attendance(request, pk):
+
+    File = Attendancefiles.objects.get(pk=pk)
+    File.get_path()
+    file_location = File.name
+    workbook = xlrd.open_workbook(file_location)
+    months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+
+    # Need optimisation ..
+    for n in range(0, workbook.nsheets):
+
+
+        sheet = workbook.sheet_by_index(n)
+        course = sheet.cell_value(2, 0)  # Subject: Course Title
+        course = course.split(":")[1][1:]
+        month_year = sheet.cell_value(2, 4).split()
+
+              
+        for i in range(5, sheet.nrows):
+
+            roll_no = sheet.cell_value(i, 1)
+            roll_no = str(roll_no).split(".")[0]
+            roll_no = ''.join( [ ch for ch in roll_no if ch in "0123456789" ] )
+
+            for j in range(4, sheet.ncols):
+
+                status = str( sheet.cell_value(i, j) )
+
+                # Storing only for absent ..
+                if status.upper() == "A":
+                   
+
+                    #print "\n\n\n\n\n\n\n", sheet.cell_value(4, j), type(sheet.cell_value(4, j)), "\n\n\n\n\n\n\n"
+                    day = int(sheet.cell_value(4, j))
+                    month = months.index( month_year[0].lower() ) + 1
+                    year = int( month_year[1] )
+
+                    d = date(day=day, year=year, month=month)
+                    
+                    try:
+
+                        obj = Attendance.objects.get(student_rollno=roll_no, course_title=course, date=d)                            
+                        obj.status = status
+                        obj.save()
+                        #print "fuck"
+
+                    except:
+
+                        student_attendance = Attendance()
+                        student_attendance.student_rollno = roll_no
+                        student_attendance.course_title = course
+                        student_attendance.date = d
+                        student_attendance.status = status
+                        student_attendance.save()
+
+
+        #time.sleep(1)
+
+    context = {
+        'value': "Data is stored in Database"
+    }
+    return render(request, 'administration/attendance_admin.html', context)
+
+
+
 
 class CreditdetailsCreate(CreateView):
     model = Creditdetails
     fields = ['file']
 
-class Upload_success(TemplateView):
-    template_name = 'administration/upload_success.html'
+
+
+def get_first_row(sheet):
+
+    # S.No | IS... |  | CSE/ECE | .....
+    for i in range(sheet.nrows):
+
+        #print "\n\n\n\n\n\n"
+        #print sheet.cell_value(i, 0)
+        #print sheet.cell_value(i, 1)
+        #print sheet.cell_value(i, 3)
+        #print "\n\n\n\n\n\n"
+
+        if str( sheet.cell_value(i, 0) ) == "1" or str( sheet.cell_value(i, 0) ) == "1.0":
+            if "IS" in str( sheet.cell_value(i, 1) ) or len( str( sheet.cell_value(i, 1) ) ) == 9:
+                if str( sheet.cell_value(i, 3) ).upper() == "CSE" or str( sheet.cell_value(i, 3) ).upper() == "ECE":
+
+                    return i
+
+
+
+# Upon succesful Credit details file submission..
+def Upload_success(request, pk):
+    
+    File = Creditdetails.objects.get(pk=pk)
+    File.get_path()
+    file_location = File.name
+    workbook = xlrd.open_workbook(file_location)
+
+
+    for excel_sheet in range(0, workbook.nsheets):
+    
+        sheet = workbook.sheet_by_index(excel_sheet)
+        first_row = get_first_row(sheet)
+        
+        for i in range(first_row, sheet.nrows):
+
+            counter = 0
+
+            roll_no = sheet.cell_value(i, 1)
+            roll_no = str(roll_no).split(".")[0]
+            roll_no = ''.join( [ ch for ch in roll_no if ch in "0123456789" ] )
+
+
+            # Checking if a record exists for currrent roll number, if yes deleting it
+            try:
+                Credits.objects.get(student_roll_no=roll_no).delete()
+            except:
+                pass
+                
+            
+            credit_object = Credits()
+            credit_object.student_roll_no =  roll_no
+            
+            # Total number of credits done...
+            total = 0
+
+            for j in range(4, sheet.ncols):
+
+                if sheet.cell_value( first_row-1, j ) == "Credits Total":
+
+                    if counter == 0:
+                        credit_object.core = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 1:
+                        credit_object.bouquet_core = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 2:
+                        credit_object.it_elective = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 3:
+                        credit_object.skills = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 4:
+                        credit_object.science = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 5:
+                        credit_object.humanities = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 6:
+                        credit_object.maths = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 7:
+                        credit_object.btp_honors = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+                    if counter == 8:
+                        credit_object.additional_projects = int(sheet.cell_value(i, j))
+                        total += int(sheet.cell_value(i, j))
+
+
+                    counter += 1
+
+
+
+            credit_object.total_credits = total
+            credit_object.save()            
+
+    context = {
+        'value': "Data is stored in Database"
+    }
+    return render(request, 'administration/upload_success.html', context)
+
+
 
 class admin_index(TemplateView):
     template_name = 'administration/admin_index.html'
-
-class AttendancefilesCreate(CreateView):
-    model = Attendancefiles
-    fields = ['file']
 
 
 
@@ -52,30 +281,43 @@ class add_courses(FormView):
             course_ug4 = True
 
         course_type = request.POST['course_type']
+
         if int(course_type) == 1:
             coursefor_cse = "Flexi Core"
             coursefor_ece = "Flexi Core"
+        
         if int(course_type) == 2:
             coursefor_cse = "Flexi Core"
             coursefor_ece = "IT Elective"
+        
+        if int(course_type) == 4:
+            coursefor_cse = "Boquet Core"
+            coursefor_ece = "IT Elective"
+        
         if int(course_type) == 3:
             coursefor_cse = "IT Elective"
             coursefor_ece = "Flexi Core"
-        if int(course_type) == 4:
-            coursefor_cse = "BC CSE"
-            coursefor_ece = "IT Elective"
+        
         if int(course_type) == 5:
             coursefor_cse = "IT Elective"
-            coursefor_ece = "BC ECE"
+            coursefor_ece = "Boquet Core"
+        
         if int(course_type) == 6:
-            coursefor_cse = "M/S Elective"
-            coursefor_ece = "M/S Elective"
+            coursefor_cse = "IT Elective"
+            coursefor_ece = "IT Elective"
+        
         if int(course_type) == 7:
-            coursefor_cse = "Humanities"
-            coursefor_ece = "Humanities"
+            coursefor_cse = "Maths/Science Elective"
+            coursefor_ece = "Maths/Science Elective"
+        
         if int(course_type) == 8:
-            coursefor_cse = "Skills"
-            coursefor_ece = "Skills"
+            coursefor_cse = "Humanities Elective"
+            coursefor_ece = "Humanities Elective"
+        
+        if int(course_type) == 9:
+            coursefor_cse = "Skills Elective"
+            coursefor_ece = "Skills Elective"
+        
         if form.is_valid():
             course = Course(
                 course_title=request.POST['course_title'],
@@ -86,8 +328,7 @@ class add_courses(FormView):
                 coursefor_ug3=course_ug3,
                 coursefor_ug4=course_ug4,
                 course_cse=coursefor_cse,
-                course_ece=coursefor_ece,
-                course_sem=request.POST['course_sem']
+                course_ece=coursefor_ece
             )
             course.save()
         return HttpResponseRedirect('/administration/add-courses/')
@@ -168,77 +409,3 @@ class Files(TemplateView):
 
 class credit_upload(TemplateView):
     template_name = 'administration/credits_upload.html'
-
-def admin_attendance(request, pk):
-    file = Attendancefiles.objects.get(pk=pk)
-    file.get_path()
-    file_location = file.name
-    workbook = xlrd.open_workbook(file_location)
-
-    for n in range(0, workbook.nsheets - 1):
-
-        sheet = workbook.sheet_by_index(n)
-        course = sheet.cell_value(2,
-                                  0)  # cell value with A3
-        for i in range(5, sheet.nrows):
-
-            rollno = str(sheet.cell_value(i, 1))
-
-            students = Attendance.objects.filter(student_rollno=rollno, course_title=course)
-
-            str_present = ""
-            str_absent = ""
-            for j in range(4, sheet.ncols):
-
-                if sheet.cell_value(i, j) == "P":
-                    str_present = str_present + str(sheet.cell_value(4, j)) + " " + sheet.cell_value(2, 4) + ","
-                elif sheet.cell_value(i, j) == "A":
-                    str_absent = str_absent + str(sheet.cell_value(4, j)) + " " + sheet.cell_value(2, 4) + ","
-
-            if len(students) == 0 and rollno != '':
-
-                b = Attendance()
-                b.student_rollno = rollno
-                b.course_title = course
-                b.present = str_present
-                b.absent = str_absent
-                b.save()
-
-            else:
-                for student in students:
-                    student.present = student.present + str_present
-                    student.absent = student.absent + str_absent
-                    student.save()
-        time.sleep(1)
-
-    context = {
-        'value': "Data is stored in Database"
-    }
-    return render(request, 'administration/attendance_admin.html', context)
-
-
-'''     for j in range(4, sheet.ncols):
-
-            #print(sheet.cell_value(i, j))
-
-            if len(students) == 0:
-                #print("yes")
-                b = Attendance()
-                b.student_rollno = rollno
-                b.course_title = course
-                if sheet.cell_value(i, j) == "P":
-                    b.present = str(sheet.cell_value(4, j)) + " " + sheet.cell_value(2, 4)
-                elif sheet.cell_value(i, j) == "A":
-                    b.abdent = str(sheet.cell_value(4, j)) + " " + sheet.cell_value(2, 4)
-                b.save()
-            else:
-                #print("no")
-                for student in students:
-                    if student.course_title == course:
-                        if sheet.cell_value(i, j) == "P":
-                            #print(type(student.present))
-                            student.present = student.present + "," + str(sheet.cell_value(4, j))+" "+sheet.cell_value(2, 4)
-
-                        elif sheet.cell_value(i, j) == "A":
-                            student.absent = student.absent + "," + str(sheet.cell_value(4, j))+" "+sheet.cell_value(2, 4)
-                        student.save()'''

@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.core.mail import send_mail,BadHeaderError
 from django.shortcuts import render
 from django.http import HttpResponseRedirect,HttpResponse
-
+from django.forms.models import model_to_dict
 from portal.serializers import UserSerializer
 from .models import *
 from administration.models import *
@@ -15,20 +15,23 @@ from django.views.generic.edit import FormView
 from .forms import *
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from django.template.defaulttags import register
 # Create your views here.
 
-'''def index(request):
-    all_notices = Notices.objects.all()
-    content_notice = {
-        'all_notices' : all_notices,
-    }
-    return render(request,'portal/index.html',content_notice)
-'''
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+
 def has_group(user, group_name):
     group = Group.objects.get(name=group_name)
     return True if group in user.groups.all() else False
 
 
+@method_decorator(login_required, name='dispatch')
 class index(TemplateView):
     template_name = 'portal/index.html'
 
@@ -61,22 +64,87 @@ class index(TemplateView):
     return render(request, 'portal/events.html', content_events)
 '''
 
+@method_decorator(login_required, name='dispatch')
 class AttendanceDisplay(TemplateView):
+    
     template_name = 'portal/attendance.html'
 
+
     def get(self, request, *args, **kwargs):
-        student = Students.objects.get(user=request.user.id)
-        attendence = Attendance.objects.get(student_rollno=student.roll_no + '.0')
-        present = attendence.present.split(',')
-        present_dates = '\n'.join(present)
-        absent = attendence.absent.split(',')
-        context = {
-            'attendence': attendence,
-            'present': present,
-            'absent': absent
-        }
+
+        current_student = Students.objects.get(user=request.user.id)
+        Branch_of_study = current_student.branch
+        my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+        courses_registered = [ model_to_dict( Course.objects.get(course_title=i) ) for i in my_courses_list]
+
+        dic = {}
+        absent_on = [[ i.course_title, i.date ] for i in Attendance.objects.filter(student_rollno=current_student.roll_no).filter(status="A")]
+
+        # Making a dictionary { Course: [date1, date2, ....], .... }
+        for c in absent_on:
+            if c[0] not in dic:
+                dic[c[0]] = [c[1]]
+            else:
+                dic[c[0]] += [c[1]]
+
+
+
+        # Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        for course in dic:
+
+            month_dic = {}
+            for date in dic[course]:
+                
+                t_month = month_names[ date.month - 1]
+                if t_month not in month_dic:
+                    month_dic[t_month] = [date]
+                else:
+                    month_dic[t_month] += [date]
+            dic[course] = month_dic
+
+
+        context = {'courses_registered': courses_registered, 'branch': Branch_of_study, 'absent_on': dic}
+
         return render(request,self.template_name,context)
 
+
+
+@method_decorator(login_required, name='dispatch')
+class credits(TemplateView):
+
+
+    template_name = 'portal/credits.html'
+
+    def get(self,request,*args,**kwargs):
+
+        current_student = Students.objects.get(user=request.user.id)
+        Branch_of_study = current_student.branch
+        roll_no = current_student.roll_no
+        context = {}
+
+        try:
+
+            credit_obj = Credits.objects.get(student_roll_no=roll_no)
+            
+            context["core"] = credit_obj.core
+            context["bouquet_core"] = credit_obj.bouquet_core
+            context["it_elective"] = credit_obj.it_elective
+            context["skills"] = credit_obj.skills
+            context["science"] = credit_obj.science
+            context["humanities"] = credit_obj.humanities
+            context["maths"] = credit_obj.maths
+            context["btp_honors"] = credit_obj.btp_honors
+            context["additional_projects"] = credit_obj.additional_projects
+            context["free_elective"] = credit_obj.free_elective
+            context["total_credits"] = credit_obj.total_credits
+
+        except:
+            context = {"error_message": "No data of yours in Database !!"}
+        
+        return render(request,self.template_name,context)
+
+        
 
 class events(TemplateView):
     template_name = 'portal/events.html'
@@ -190,7 +258,9 @@ class register(FormView):
 '''
 
 
+@method_decorator(login_required, name='dispatch')
 class register(FormView):
+    
     def get(self, request, *args, **kwargs):
         userId = request.user.id
         #return HttpResponse(userId)
@@ -223,31 +293,31 @@ class register(FormView):
         S_el = []  # Skills Elective
 
         for course in Courses_for_offering:
-            #return HttpResponse(course)
+            
             if Branch_of_study == "CSE":
-                if course.course_cse == "flexi_core":
-
+                if course.course_cse == "Flexi Core":
                     FC.append(course)
-                if course.course_cse == "bc_cse":
+                if course.course_cse == "Boquet Core":
                     BC.append(course)
-                if course.course_cse == "it_lective":
+                if course.course_cse == "IT Elective":
                     IT_el.append(course)
-
+                
             if Branch_of_study == "ECE":
-                if course.course_ece == "flexi_core":
+                if course.course_ece == "Flexi Core":
                     FC.append(course)
-                if course.course_ece == "bc_ece":
+                if course.course_ece == "Boquet Core":
                     BC.append(course)
-                if course.course_ece == "it_lective":
+                if course.course_ece == "IT Elective":
                     IT_el.append(course)
 
-            if course.course_cse == "ms_elective":
+
+            if course.course_cse == "Maths/Science Elective":
                 MS_el.append(course)
 
-            if course.course_cse == "humanities":
+            if course.course_cse == "Humanities Elective":
                 H_el.append(course)
 
-            if course.course_cse == "skills":
+            if course.course_cse == "Skills Elective":
                 S_el.append(course)
 
         template_name = 'portal/register.html'
@@ -354,15 +424,6 @@ def forum(request):
         return HttpResponseRedirect('/forum')
 
 
-class credits(TemplateView):
-    template_name = 'portal/credits.html'
-    def get_context_data(self, **kwargs):
-        context = super(credits,self).get_context_data(**kwargs)
-        context = {
-            'credits': Credits.objects.all()
-        }
-        return context
-
 
 class Signup(FormView):
 
@@ -441,6 +502,7 @@ class Signup(FormView):
 
 
 
+@method_decorator(login_required, name='dispatch')
 class unregister(FormView):
     def get(self, request, *args, **kwargs):
         current_student = Students.objects.get(user= request.user.id)
@@ -449,6 +511,7 @@ class unregister(FormView):
 
         context = {'courses_registered': courses_registered}
         return render(request, 'portal/unregister.html', context)
+
 
 
 # Runs in background
@@ -523,29 +586,3 @@ class forgotPassword(TemplateView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-@method_decorator(login_required, name='dispatch')
-class credits(TemplateView):
-    template_name = 'portal/credits.html'
-
-    def get(self,request,*args,**kwargs):
-        file_location = "C:/Django/studentPortal/media/Sample_Data.xlsx"
-        workbook = xlrd.open_workbook(file_location)
-        sheet = workbook.sheet_by_index(0)
-        string = ""
-        student = Students.objects.get(user = request.user.id)
-        for i in range(6, sheet.nrows):
-
-            rollno = str(sheet.cell_value(i, 1))
-            if(rollno == "IS"+student.roll_no):
-                for j in range(4, sheet.ncols):
-
-                    if sheet.cell_value(5, j) == "Credits Total":
-
-                        string  = string + str(sheet.cell_value(i, j)) + ","
-
-        context = super(credits,self).get_context_data(**kwargs)
-        context = {
-            'credits': string.split(',')
-        }
-        return render(request,self.template_name,context)

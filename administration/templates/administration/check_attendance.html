@@ -1,0 +1,68 @@
+{% extends 'administration/admin_index.html' %}
+
+{% block centerContent %}
+
+
+    <br>
+    <h2>&nbsp Check attendance for following courses:</h2>
+    <br><br>
+
+    <div class = "col-md-10" >
+
+        <div class="panel-group" id="UniqueName">
+        {% for course in data %}
+            
+            <div class="panel panel-default">
+             
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        
+                        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#UniqueName" href="#collapse{{ forloop.counter }}">
+                            &nbsp&nbsp <strong>{{ course.course_title }}</strong> - {{ course.course_cse }}
+                        </a>
+
+                    </h4>
+                </div>
+             
+                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse " style="height: auto;">
+                    <div class="panel-body">
+                        <form class="form-inline" style="margin-bottom: 10px">
+                            <div class="form-group ">
+                                
+                                {% with data|get_item:course as students %}
+
+                                    <table class="table table-bordered">
+                                        <th>Student name</th>
+                                        <th>Absent for this Course on</th>
+                                        
+                                        {% for student in students %}
+                                            <tr>
+                                                <td>{{ student }}</td>
+
+                                        
+                                                {% with students|get_item:student as absent_dates %}
+                                                    {% for date in absent_dates %}
+                                        
+                                                        <td>{{ date }}</td>
+                                        
+                                                    {% endfor %}
+                                                {% endwith %}
+                                                
+                                        
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                {% endwith %}
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            
+            </div>
+        {% endfor %}
+
+        </div>
+
+    </div>
+{% endblock %}
