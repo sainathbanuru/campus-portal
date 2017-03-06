@@ -10,55 +10,59 @@ import xlrd
 import time
 
 
+
 def check_attendance(request):
+    if request.user.groups.filter(name='admin').exists():
 
-    
-    template_name = 'administration/check_attendance.html'
-    data = {}
-    courses = Course.objects.all()
+        template_name = 'administration/check_attendance.html'
+        data = {}
+        courses = Course.objects.all()
 
-    for course in courses:
+        for course in courses:
 
-        # Find all students who opted the course....
-        students_opted = [i.Student for i in course.student_course_set.all()]
-        for student in students_opted:
+            # Find all students who opted the course....
+            students_opted = [i.Student for i in course.student_course_set.all()]
+            for student in students_opted:
 
-            student_name = student.user.get_full_name()
+                student_name = student.user.get_full_name()
 
-            # Compute attendance....
-            absent_on = list(set([i.date for i in Attendance.objects.filter(student_rollno=student.roll_no).filter(course_title=course.course_title).filter(status="A") ]))
+                # Compute attendance....
+                absent_on = list(set([i.date for i in Attendance.objects.filter(student_rollno=student.roll_no).filter(course_title=course.course_title).filter(status="A") ]))
 
-            
-            '''# Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
-            month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-            month_dic = {}
-            
-            
-            for date in absent_on:
-                
-                t_month = month_names[ date.month - 1]
-                if t_month not in month_dic:
-                    month_dic[t_month] = [date]
+
+                '''# Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
+                month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                month_dic = {}
+
+
+                for date in absent_on:
+
+                    t_month = month_names[ date.month - 1]
+                    if t_month not in month_dic:
+                        month_dic[t_month] = [date]
+                    else:
+                        month_dic[t_month] += [date]'''
+
+
+
+                if course in data:
+                    data[course][student_name] = absent_on
+
                 else:
-                    month_dic[t_month] += [date]'''
-            
-
-
-            if course in data:
-                data[course][student_name] = absent_on
-                
-            else:
-                data[course] = {student_name: absent_on}
+                    data[course] = {student_name: absent_on}
 
 
 
 
 
-    context = {
-        'data' : data,
-        'all_notices' : Notices.objects.all()
-    }
-    return render(request, template_name, context)
+        context = {
+            'data' : data,
+            'all_notices' : Notices.objects.all()
+        }
+
+        return render(request, template_name, context)
+    else:
+        return HttpResponse("<h1>You are not authorized to use this page</h1>")
 
 
 
@@ -67,69 +71,71 @@ class AttendancefilesCreate(CreateView):
     fields = ['file']
 
 
+
 def admin_attendance(request, pk):
+    if request.user.groups.filter(name='admin').exists():
+        File = Attendancefiles.objects.get(pk=pk)
+        File.get_path()
+        file_location = File.name
+        workbook = xlrd.open_workbook(file_location)
+        months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
 
-    File = Attendancefiles.objects.get(pk=pk)
-    File.get_path()
-    file_location = File.name
-    workbook = xlrd.open_workbook(file_location)
-    months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
-
-    # Need optimisation ..
-    for n in range(0, workbook.nsheets):
-
-
-        sheet = workbook.sheet_by_index(n)
-        course = sheet.cell_value(2, 0)  # Subject: Course Title
-        course = course.split(":")[1][1:]
-        month_year = sheet.cell_value(2, 4).split()
-
-              
-        for i in range(5, sheet.nrows):
-
-            roll_no = sheet.cell_value(i, 1)
-            roll_no = str(roll_no).split(".")[0]
-            roll_no = ''.join( [ ch for ch in roll_no if ch in "0123456789" ] )
-
-            for j in range(4, sheet.ncols):
-
-                status = str( sheet.cell_value(i, j) )
-
-                # Storing only for absent ..
-                if status.upper() == "A":
-                   
-
-                    #print "\n\n\n\n\n\n\n", sheet.cell_value(4, j), type(sheet.cell_value(4, j)), "\n\n\n\n\n\n\n"
-                    day = int(sheet.cell_value(4, j))
-                    month = months.index( month_year[0].lower() ) + 1
-                    year = int( month_year[1] )
-
-                    d = date(day=day, year=year, month=month)
-                    
-                    try:
-
-                        obj = Attendance.objects.get(student_rollno=roll_no, course_title=course, date=d)                            
-                        obj.status = status
-                        obj.save()
-                        #print "fuck"
-
-                    except:
-
-                        student_attendance = Attendance()
-                        student_attendance.student_rollno = roll_no
-                        student_attendance.course_title = course
-                        student_attendance.date = d
-                        student_attendance.status = status
-                        student_attendance.save()
+        # Need optimisation ..
+        for n in range(0, workbook.nsheets):
 
 
-        #time.sleep(1)
+            sheet = workbook.sheet_by_index(n)
+            course = sheet.cell_value(2, 0)  # Subject: Course Title
+            course = course.split(":")[1][1:]
+            month_year = sheet.cell_value(2, 4).split()
 
-    context = {
-        'value': "Data is stored in Database"
-    }
-    return render(request, 'administration/attendance_admin.html', context)
 
+            for i in range(5, sheet.nrows):
+
+                roll_no = sheet.cell_value(i, 1)
+                roll_no = str(roll_no).split(".")[0]
+                roll_no = ''.join( [ ch for ch in roll_no if ch in "0123456789" ] )
+
+                for j in range(4, sheet.ncols):
+
+                    status = str( sheet.cell_value(i, j) )
+
+                    # Storing only for absent ..
+                    if status.upper() == "A":
+
+
+                        #print "\n\n\n\n\n\n\n", sheet.cell_value(4, j), type(sheet.cell_value(4, j)), "\n\n\n\n\n\n\n"
+                        day = int(sheet.cell_value(4, j))
+                        month = months.index( month_year[0].lower() ) + 1
+                        year = int( month_year[1] )
+
+                        d = date(day=day, year=year, month=month)
+
+                        try:
+
+                            obj = Attendance.objects.get(student_rollno=roll_no, course_title=course, date=d)
+                            obj.status = status
+                            obj.save()
+                            #print "fuck"
+
+                        except:
+
+                            student_attendance = Attendance()
+                            student_attendance.student_rollno = roll_no
+                            student_attendance.course_title = course
+                            student_attendance.date = d
+                            student_attendance.status = status
+                            student_attendance.save()
+
+
+            #time.sleep(1)
+
+        context = {
+            'value': "Data is stored in Database"
+        }
+        return render(request, 'administration/attendance_admin.html', context)
+    else:
+        return HttpResponse("<h1>You are not authorized to use this page</h1>")
 
 
 
@@ -252,6 +258,12 @@ def Upload_success(request, pk):
 class admin_index(TemplateView):
     template_name = 'administration/admin_index.html'
 
+    def get(self, request, *args, **kwargs):
+        if request.user.groups.filter(name='admin').exists():
+            return render(request,self.template_name,{})
+        else:
+            return HttpResponse("You are not authorized to use this page")
+
 
 
 class add_courses(FormView):
@@ -261,11 +273,14 @@ class add_courses(FormView):
     def get(self, request, *args, **kwargs):
         form = self.form_class(None)
         courses_added = Course.objects.all()
-        context = {
-            'form' : form,
-            'courses_added' : courses_added,
-            'all_notices' : Notices.objects.all()
-        }
+        if request.user.groups.filter(name='admin').exists():
+            context = {
+                'form' : form,
+                'courses_added' : courses_added,
+                'all_notices' : Notices.objects.all()
+            }
+        else:
+            return HttpResponse("You are not authorized to use this page")
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
@@ -361,9 +376,12 @@ class add_notice(TemplateView):
 
 def addNotice(request):
     if request.method =="GET":
-        context = {
-            'all_notices':Notices.objects.all()
-        }
+        if request.user.groups.filter(name='admin').exists():
+            context = {
+                'all_notices':Notices.objects.all()
+            }
+        else:
+            return HttpResponse("You are not authorized to use this page")
         return render(request, 'administration/add-notice.html', context)
     if request.method =="POST":
         notice = Notices(
@@ -376,6 +394,10 @@ def addNotice(request):
 
 def updateFormStatus(request):
     if request.method == 'GET':
+        if request.user.groups.filter(name='admin').exists():
+            pass
+        else:
+            return HttpResponse("You are not authorized to use this page")
         return render(request,'administration/form_status.html',{})
     if request.method =='POST':
         req_id = request.POST['search_id']
@@ -384,11 +406,14 @@ def updateFormStatus(request):
 
 def FormStatus(request,search_id):
     if request.method == 'GET':
-        try :
-            requested_form = formRequest.objects.get(id=search_id)
-            return render(request, 'administration/form_status.html',{'requested_form':requested_form})
-        except formRequest.DoesNotExist:
-            return render(request, 'administration/form_status.html',{'error_message':"Enter Valid ID"})
+        if request.user.groups.filter(name='admin').exists():
+            try :
+                requested_form = formRequest.objects.get(id=search_id)
+                return render(request, 'administration/form_status.html',{'requested_form':requested_form})
+            except formRequest.DoesNotExist:
+                return render(request, 'administration/form_status.html',{'error_message':"Enter Valid ID"})
+        else:
+            return HttpResponse("You are not authorized to use this page")
     if request.method == 'POST':
         status = request.POST['status']
         updated = formRequest.objects.get(id=search_id)
@@ -401,11 +426,20 @@ class Files(TemplateView):
     template_name = 'administration/files.html'
 
     def get(self, request, *args, **kwargs):
-        context = {
-            'files': [Attendancefiles.objects.all()]
-        }
+        if request.user.groups.filter(name='admin').exists():
+            context = {
+                'files': [Attendancefiles.objects.all()]
+            }
+        else:
+            return HttpResponse("<h1>You are not authorized to use this page</h1>")
         return render(request, self.template_name, context)
 
 
 class credit_upload(TemplateView):
     template_name = 'administration/credits_upload.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user.groups.filter(name='admin').exists():
+            return render(request,self.template_name,{})
+        else:
+            return HttpResponse("<h1>You are not authorized to use this page</h1>")
