@@ -1,4 +1,4 @@
-from django.forms import CheckboxInput, CharField, BooleanField, TextInput, Textarea, FileInput,SelectMultiple,IntegerField,ChoiceField,NumberInput,Select
+from django.forms import CheckboxInput, CharField, BooleanField, TextInput, Textarea, FileField,SelectMultiple,IntegerField,FileInput,ChoiceField,NumberInput,Select
 from django.contrib.auth.forms import *
 from .choices import *
 
@@ -18,3 +18,8 @@ class courses(forms.Form):
 class Notice(forms.Form):
     notice_title = CharField(widget=TextInput(attrs={'class':'form-control','id':'notice_title'}))
     notice_decsription = CharField(widget=Textarea(attrs={'class':'form-control','id':'notice_decsription'}))
+
+
+class add_almanac(forms.Form):
+    almanac = FileField()
+

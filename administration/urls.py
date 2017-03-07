@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
 
+
+
 urlpatterns = [
     url(r'^$',views.admin_index.as_view(),name="admin_index"),
     url(r'^add-courses/$',views.add_courses.as_view(),name="add-course"),
@@ -16,4 +18,6 @@ urlpatterns = [
     url(r'^upload_success/(?P<pk>[0-9]+)/$', views.Upload_success, name="upload_success"),
 
     url(r'^check_attendance/',views.check_attendance,name="check_attendance"),
+    url(r'^add_almanac/',views.add_almanac.as_view(),name="add_almanac"),
+
 ]

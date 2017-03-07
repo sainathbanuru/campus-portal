@@ -5,35 +5,35 @@
     
     <br><strong><h2>&nbsp&nbsp <u>Your Courses: </u></h2></strong><br>
 
-    
+
     {% if courses_registered %}
 
         <ul>
 
             {% if branch == "CSE" %}
-                    
+
                 <li>
 
                     <div class="panel-group" id="UniqueName">
                     {% for course in courses_registered %}
-                        
+
                         <div class="panel panel-default">
-                         
+
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    
+
                                     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#UniqueName" href="#collapse{{ forloop.counter }}">
                                         &nbsp&nbsp <strong>{{ course.course_title }}</strong> - {{ course.course_cse }}
                                     </a>
 
                                 </h4>
                             </div>
-                         
+
                             <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse " style="height: auto;">
                                 <div class="panel-body">
                                     <form class="form-inline" style="margin-bottom: 10px">
                                         <div class="form-group ">
-                                            
+
 
                                             <table class="table table-bordered">
 
@@ -50,7 +50,7 @@
 
                                                                 {# Dates: [date1, date2, ...] #}
                                                                 {% with Months|get_item:month as Dates %}
-                                                                
+
                                                                     {% for date in Dates %}
                                                                         <td> <h6>{{ date.day }}</h6> </td>
                                                                     {% endfor %}
@@ -58,20 +58,20 @@
                                                                 {% endwith %}
                                                             </tr>
                                                         {% endfor %}
-                                                    
+
                                                     {% endwith %}
                                                 {% endif %}
 
                                             </table>
-                                        
+
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        
+
                         </div>
                     {% endfor %}
-                
+
                     </div>
                 </li>
 
@@ -80,29 +80,29 @@
 
 
             {% if branch == "ECE" %}
-                
+
                 <li>
 
                     <div class="panel-group" id="UniqueName">
                     {% for course in courses_registered %}
-                        
+
                         <div class="panel panel-default">
-                         
+
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    
+
                                     <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#UniqueName" href="#collapse{{ forloop.counter }}">
                                         &nbsp&nbsp <strong>{{ course.course_title }}</strong> - {{ course.course_cse }}
                                     </a>
 
                                 </h4>
                             </div>
-                         
+
                             <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse " style="height: auto;">
                                 <div class="panel-body">
                                     <form class="form-inline" style="margin-bottom: 10px">
                                         <div class="form-group ">
-                                            
+
 
                                             <table class="table table-bordered">
 
@@ -119,7 +119,7 @@
 
                                                                 {# Dates: [date1, date2, ...] #}
                                                                 {% with Months|get_item:month as Dates %}
-                                                                
+
                                                                     {% for date in Dates %}
                                                                         <td> <h6>{{ date.day }}</h6> </td>
                                                                     {% endfor %}
@@ -127,20 +127,20 @@
                                                                 {% endwith %}
                                                             </tr>
                                                         {% endfor %}
-                                                    
+
                                                     {% endwith %}
                                                 {% endif %}
 
                                             </table>
-                                        
+
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                        
+
                         </div>
                     {% endfor %}
-                
+
                     </div>
                 </li>
 

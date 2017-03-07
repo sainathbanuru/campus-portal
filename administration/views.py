@@ -443,3 +443,21 @@ class credit_upload(TemplateView):
             return render(request,self.template_name,{})
         else:
             return HttpResponse("<h1>You are not authorized to use this page</h1>")
+
+
+
+
+
+class add_almanac(FormView):
+    template_name = 'administration/add-almanac.html'
+    form_class = add_almanac
+
+    def get(self, request, *args, **kwargs):
+       form = self.form_class(None)
+       context = {
+            'form':form
+       }
+       return render(request,self.template_name,context)
+
+    def post(self, request, *args, **kwargs):
+        return HttpResponse('correct')

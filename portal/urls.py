@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^unregister2/$', views.unregister2, name='unregister2'),
     url(r'^my_courses/',views.my_courses,name="my_courses"),
     url(r'^attendance/$', views.AttendanceDisplay.as_view(), name='attendance'),
+    url(r'^suggestions/$', views.suggestions.as_view(), name='suggestions'),
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'users/',views.UserViewSet,name='user')

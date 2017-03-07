@@ -51,6 +51,7 @@ class index(TemplateView):
                 'all_notices': Notices.objects.all(),
                 'admin': 'admin'
             }
+            return HttpResponseRedirect('/administration/')
         return render(request, 'portal/index.html', context)
 
 '''def events(request):
@@ -71,43 +72,44 @@ class AttendanceDisplay(TemplateView):
 
 
     def get(self, request, *args, **kwargs):
+        try:
+            current_student = Students.objects.get(user=request.user.id)
+            Branch_of_study = current_student.branch
+            my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
+            courses_registered = [ model_to_dict( Course.objects.get(course_title=i) ) for i in my_courses_list]
 
-        current_student = Students.objects.get(user=request.user.id)
-        Branch_of_study = current_student.branch
-        my_courses_list = [i.Course.course_title for i in current_student.student_course_set.all()]
-        courses_registered = [ model_to_dict( Course.objects.get(course_title=i) ) for i in my_courses_list]
+            dic = {}
+            absent_on = [[ i.course_title, i.date ] for i in Attendance.objects.filter(student_rollno=current_student.roll_no).filter(status="A")]
 
-        dic = {}
-        absent_on = [[ i.course_title, i.date ] for i in Attendance.objects.filter(student_rollno=current_student.roll_no).filter(status="A")]
-
-        # Making a dictionary { Course: [date1, date2, ....], .... }
-        for c in absent_on:
-            if c[0] not in dic:
-                dic[c[0]] = [c[1]]
-            else:
-                dic[c[0]] += [c[1]]
-
-
-
-        # Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
-        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        for course in dic:
-
-            month_dic = {}
-            for date in dic[course]:
-                
-                t_month = month_names[ date.month - 1]
-                if t_month not in month_dic:
-                    month_dic[t_month] = [date]
+            # Making a dictionary { Course: [date1, date2, ....], .... }
+            for c in absent_on:
+                if c[0] not in dic:
+                    dic[c[0]] = [c[1]]
                 else:
-                    month_dic[t_month] += [date]
-            dic[course] = month_dic
+                    dic[c[0]] += [c[1]]
 
 
-        context = {'courses_registered': courses_registered, 'branch': Branch_of_study, 'absent_on': dic}
 
-        return render(request,self.template_name,context)
+            # Converting date to a dic as follows - { Month1: [day1, day2, .. ], ..... }
+            month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            for course in dic:
 
+                month_dic = {}
+                for date in dic[course]:
+
+                    t_month = month_names[ date.month - 1]
+                    if t_month not in month_dic:
+                        month_dic[t_month] = [date]
+                    else:
+                        month_dic[t_month] += [date]
+                dic[course] = month_dic
+
+
+            context = {'courses_registered': courses_registered, 'branch': Branch_of_study, 'absent_on': dic}
+
+            return render(request,self.template_name,context)
+        except:
+            return render(request,self.template_name,{'error_message':'No data found'})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -118,12 +120,13 @@ class credits(TemplateView):
 
     def get(self,request,*args,**kwargs):
 
-        current_student = Students.objects.get(user=request.user.id)
-        Branch_of_study = current_student.branch
-        roll_no = current_student.roll_no
-        context = {}
+
 
         try:
+            current_student = Students.objects.get(user=request.user.id)
+            Branch_of_study = current_student.branch
+            roll_no = current_student.roll_no
+            context = {}
 
             credit_obj = Credits.objects.get(student_roll_no=roll_no)
             
@@ -586,3 +589,22 @@ class forgotPassword(TemplateView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class suggestions(TemplateView):
+    template_name = 'portal/suggestions.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template_name,{})
+
+    def post(self, request, *args, **kwargs):
+        name = request.POST['name']
+        email = request.user.email
+        message = request.POST['message']
+        try:
+            send_mail("Campus-portal Suggestions", "Suggestion :  " + message + "  by  " + name, email,
+                  ['sainath.b14@iiits.in'])
+        except:
+            return HttpResponse("Could not process your Request")
+        return HttpResponse("Thanks for sending your suggestions")
+

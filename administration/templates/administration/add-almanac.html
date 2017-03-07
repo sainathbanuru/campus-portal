@@ -1,0 +1,25 @@
+{% extends 'administration/admin_index.html' %}
+
+
+{% block centerContent %}
+
+	<br>
+	<h1>&nbsp&nbsp Upload Almanac file here: </h1>
+	<div class = col-md-1></div>
+	<div class = col-md-6>
+		<form class="form-horizontal" action="{% url 'add_almanac' %}" method="post" enctype="multipart/form-data" style="margin-top: 50px">
+			{% csrf_token %}
+			 <div class="form-group">
+                    <label for="almanac">Almanac </label>
+                    {{ form.almanac }}
+             </div>
+            <div class="form-group">
+                <div class="col-sm-offset-02 col-sm-10">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+		</div>
+		</form>
+	</div>
+
+{% endblock %}
+<!--{% url 'attendance_success' %}-->

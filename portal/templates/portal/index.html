@@ -58,6 +58,7 @@
                             <li><a href="{% url 'formupdate' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Form status</a></li>
                             <li><a href="{% url 'attendance_upload' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendance</a></li>
                             <li><a href="{% url 'credit_upload' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits</a></li>
+                            <li><a href="{% url 'check_attendance' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Check Attendance</a></li>
 
                         </ul>
 
@@ -70,7 +71,7 @@
                             <li><a href="{% url 'attendance' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Attendence</a></li>
                             <li><a href="{% url 'credits' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Credits Details</a></li>
                             <li><a href="{% url 'requestForm' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Request a Form</a></li>
-                            <li><a href="http://cosmos.iiits.in"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;cosmos</a></li>
+                            <li><a href="{% url 'suggestions' %}"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;Suggestions/Queries</a></li>
                         </ul>
                     {% endif %}
                 </div>
